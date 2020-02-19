@@ -1,20 +1,40 @@
 <script lang="ts">
   import { writable, Writable } from 'svelte/store'
   import Counter from './components/Counter.svelte'
+  import Child from './components/Child.svelte'
 
   const count: Writable<number> = writable(100)
   export let name: string
 </script>
 
 <style>
+  main {
+    text-align: center;
+    padding: 1em;
+    max-width: 240px;
+    margin: 0 auto;
+  }
+
   h1 {
-    color: red;
+    color: #ff3e00;
+    text-transform: uppercase;
+    font-size: 4em;
+    font-weight: 100;
+  }
+
+  @media (min-width: 640px) {
+    main {
+      max-width: none;
+    }
   }
 </style>
 
-<h1>Hello {name}!</h1>
-<p>
-  <Counter />
-  <Counter value={1}>Counter 1</Counter>
-  <Counter value={$count} step={3}>Counter 2</Counter>
-</p>
+<main>
+  <h1>Hello {name}!</h1>
+  <p>
+    <Counter />
+    <Counter value={1}>Counter 1</Counter>
+    <Counter value={$count} step={3}>Counter 2</Counter>
+    <Child value={$count} />
+  </p>
+</main>
