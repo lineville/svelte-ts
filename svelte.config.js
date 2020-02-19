@@ -1,22 +1,23 @@
+// svelte options exported for svelte-vscode
+
 const {
-  preprocess,
+  preprocess: makeTsPreprocess,
   createEnv,
   readConfigFile,
-} = require('@pyoner/svelte-ts-preprocess')
-const autoPreprocess = require('svelte-preprocess')
+} = require("@pyoner/svelte-ts-preprocess");
 
-const postcss = require('./postcss.config.js')
-const env = createEnv()
+const env = createEnv();
+const compilerOptions = readConfigFile(env);
+const preprocessOptions = {
+  env,
+  compilerOptions: {
+    ...compilerOptions,
+    allowNonTsExtensions: true,
+  },
+};
+const preprocess = makeTsPreprocess(preprocessOptions);
 
 module.exports = {
-  preprocess: {
-    ...preprocess({
-      env,
-      compilerOptions: {
-        ...readConfigFile(env),
-        allowNonTsExtensions: true
-      },
-    }),
-    ...autoPreprocess({ transformers: { postcss } })
-  },
-}
+  dev: process.env.NODE_ENV !== "development",
+  preprocess,
+};

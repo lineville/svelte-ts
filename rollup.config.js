@@ -1,51 +1,56 @@
-const svelte = require('rollup-plugin-svelte')
-const commonjs = require('rollup-plugin-commonjs')
-const resolve = require('rollup-plugin-node-resolve')
-const tsplugin = require('rollup-plugin-typescript2')
-const typescript = require('typescript')
-const { terser } = require('rollup-plugin-terser')
-const serve = require('rollup-plugin-serve')
-const livereload = require('rollup-plugin-livereload')
+import svelte from "rollup-plugin-svelte";
+import resolve from "rollup-plugin-node-resolve";
+import commonjs from "rollup-plugin-commonjs";
+import livereload from "rollup-plugin-livereload";
+import { terser } from "rollup-plugin-terser";
+import typescript from "@wessberg/rollup-plugin-ts";
 
-// const tsconfig = require('./tsconfig.json')
-const svelteConfig = require('./svelte.config.js')
-const base = 'public'
-const prod = process.env.NODE_ENV === 'production'
-const dev = process.env.NODE_ENV === 'development'
-const css =
-  process.env.NODE_ENV === 'test'
-    ? false
-    : css => css.write(base + '/bundle.css')
+const svelteOptions = require("./svelte.config");
 
-module.exports = {
-  input: 'src/main.ts',
+const production = !process.env.ROLLUP_WATCH;
+
+export default {
+  input: "src/main.ts",
   output: {
     sourcemap: true,
-    name: 'main',
-    file: base + '/bundle.js',
-    format: 'iife',
-    exports: 'named',
+    format: "iife",
+    name: "app",
+    file: "public/bundle.js"
   },
   plugins: [
-    svelte({ dev, css, ...svelteConfig }),
+    svelte({
+      ...svelteOptions,
+      // enable run-time checks when not in production
+      dev: !production,
+      // we'll extract any component CSS out into
+      // a separate file — better for performance
+      css: css => {
+        css.write("public/bundle.css");
+      }
+    }),
+
+    // If you have external dependencies installed from
+    // npm, you'll most likely need these plugins. In
+    // some cases you'll need additional configuration —
+    // consult the documentation for details:
+    // https://github.com/rollup/rollup-plugin-commonjs
     resolve({
       browser: true,
       dedupe: importee =>
-        importee === 'svelte' || importee.startsWith('svelte/'),
+        importee === "svelte" || importee.startsWith("svelte/")
     }),
-    commonjs({ include: 'node_modules/**' }),
-    tsplugin({
-      typescript,
-      tsconfig: './tsconfig.json',
-    }),
-    dev &&
-      serve({
-        open: false,
-        openPage: '/index.html',
-        historyApiFallback: '/index.html',
-        contentBase: ['./' + base],
-      }),
-    process.env.ROLLUP_WATCH && livereload({ watch: base }),
-    prod && terser({ sourcemap: true }),
+    commonjs(),
+    typescript(),
+
+    // Watch the `public` directory and refresh the
+    // browser on changes when not in production
+    !production && livereload("public"),
+
+    // If we're building for production (npm run build
+    // instead of npm run dev), minify
+    production && terser()
   ],
-}
+  watch: {
+    clearScreen: false
+  }
+};

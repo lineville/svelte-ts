@@ -1,33 +1,93 @@
-# Svelte3-Typescript Boilerplate
+# Typescript template for Svelte v3
 
-TS analytics works in VSCode! Based on:
+---
 
-- [geakstr/svelte-3-rollup-typescript-vscode](https://github.com/geakstr/svelte-3-rollup-typescript-vscode)
-- [Axelen123/svelte-ts-template](https://github.com/Axelen123/svelte-ts-template)
+# svelte app
 
-## Description
+This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/pyoner/svelte-typescript
 
-Starter pack for Svelte 3/Rollup/Typescript/Visual Studio Code:
+## Install
 
-- Typescript support inside Svelte components with [@pyonr/svelte-ts-preprocess](https://github.com/pyonr/svelte-ts-preprocess)
-- Also it adds some support for Visual Studio Code and [svelte-vscode](https://github.com/UnwrittenFun/svelte-vscode) extension (via `svelte.config.js`)
-- Jest to test .ts/.svelte
-- Supports `index.html` entry file, dev server to serve it and livereload
-- ESLint, Prettier
-- See all in `rollup.config.js`
+### For Linux users
+```bash
+mkdir svelte-app
+curl -L https://github.com/pyoner/svelte-typescript/tarball/master > svelte-typescript.tar
+tar --strip-components=3 --wildcards --one-top-level=svelte-app -xf svelte-typescript.tar */packages/template
+```
 
-## How to start
+### For Mac users
+```zsh
+mkdir svelte-app
+curl -L https://github.com/pyoner/svelte-typescript/tarball/master > svelte-typescript.tar
+tar --strip-components=3 -C svelte-app -xf svelte-typescript.tar '*/packages/template/' 
+```
 
-Please, notice the importance of `svelte.config.js` in the root directory for VSCode to use your project's preprocessors. Jest, Prettier, ESLint, PostCSS are optional but useful. So clone and
+### For Windows users
+Download https://github.com/pyoner/svelte-typescript/archive/master.zip and extract template from `packages/template`
 
-```sh
-npm i
+*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+
+### For VSCode users
+
+Regardless of your OS, if you're using VSCode as your IDE for your Svelte project, you also need to do an extra step in order to have full language support with [svelte-code extension](https://github.com/UnwrittenFun/svelte-vscode).
+
+Create a `svelte.config.js` file in the root of your project with the following content:
+
+```
+const { preprocess } = require("@pyoner/svelte-ts-preprocess")
+
+module.exports = {
+  preprocess: preprocess()
+}
+```
+
+## Get started
+
+Install the dependencies...
+
+```bash
+cd svelte-app
+npm install
+```
+
+...then start [Rollup](https://rollupjs.org):
+
+```bash
 npm run dev
 ```
 
-### Linting
+Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
 
-```sh
-npm run lint
-npm run format
+
+## Deploying to the web
+
+### With [now](https://zeit.co/now)
+
+Install `now` if you haven't already:
+
+```bash
+npm install -g now
+```
+
+Then, from within your project folder:
+
+```bash
+now
+```
+
+As an alternative, use the [Now desktop client](https://zeit.co/download) and simply drag the unzipped project folder to the taskbar icon.
+
+### With [surge](https://surge.sh/)
+
+Install `surge` if you haven't already:
+
+```bash
+npm install -g surge
+```
+
+Then, from within your project folder:
+
+```bash
+npm run build
+surge public
 ```

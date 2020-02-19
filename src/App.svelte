@@ -1,32 +1,41 @@
 <script lang="ts">
-  import { writable, Writable } from 'svelte/store'
-  import Counter from './components/Counter.svelte'
-  import Child from './components/Child.svelte'
+  import { onMount, onDestroy } from "svelte";
+  import { writable } from "svelte/store";
+  import { myStore } from "./store";
 
-  const count: Writable<number> = writable(100)
-  export let name: string
+  import Counter from "./Counter.svelte";
+
+  const count = writable(100);
+  const unsubscribe = count.subscribe(value => console.log("count", value));
+
+  export let name: string;
+  onMount(() => {
+    console.log("App mounted");
+  });
+
+  onDestroy(() => {
+    unsubscribe();
+  });
 </script>
 
 <style>
   main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
+		text-align: center;
+		padding: 1em;
+		max-width: 240px;
+		margin: 0 auto;
+	}
+	h1 {
+		color: #ff3e00;
+		text-transform: uppercase;
+		font-size: 4em;
+		font-weight: 100;
+	}
+	@media (min-width: 640px) {
+		main {
+			max-width: none;
+		}
+	}
 </style>
 
 <main>
@@ -34,7 +43,7 @@
   <p>
     <Counter />
     <Counter value={1}>Counter 1</Counter>
-    <Counter value={$count} step={3}>Counter 2</Counter>
-    <Child value={$count} />
+    <Counter bind:value={$count} step={3}>Counter 2</Counter>
+    <Counter bind:value={$myStore} step={5}>Counter 3</Counter>
   </p>
 </main>
