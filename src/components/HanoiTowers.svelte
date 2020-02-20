@@ -1,6 +1,6 @@
 <script lang="ts">
     import Tower from './Tower.svelte'
-    import Stack from './utils/Stack'
+    import Stack from '../utils/Stack'
     let tower1 : Stack<number> = new Stack<number>([4, 3, 2, 1]);
     let tower2 : Stack<number> = new Stack<number>();
     let tower3 : Stack<number> = new Stack<number>();
