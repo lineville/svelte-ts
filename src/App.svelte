@@ -4,6 +4,7 @@
   import { myStore } from "./store";
 
   import Counter from "./Counter.svelte";
+  import HanoiTowers from "./HanoiTowers.svelte";
 
   const count = writable(100);
   const unsubscribe = count.subscribe(value => console.log("count", value));
@@ -42,8 +43,11 @@
   <h1>Hello {name}!</h1>
   <p>
     <Counter />
-    <Counter value={1}>Counter 1</Counter>
+    <HanoiTowers />
+    <!-- <Counter value={1}>Counter 1</Counter>
     <Counter bind:value={$count} step={3}>Counter 2</Counter>
-    <Counter bind:value={$myStore} step={5}>Counter 3</Counter>
+    <Counter bind:value={$myStore} step={5}>Counter 3</Counter> -->
+
+
   </p>
 </main>
