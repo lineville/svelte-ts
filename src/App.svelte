@@ -1,20 +1,21 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
-  import { writable } from "svelte/store";
-  import { myStore } from "./store";
+  import { onMount, onDestroy } from 'svelte';
+  import { writable } from 'svelte/store';
+  import { myStore } from './store';
 
-  import Counter from "./components/Counter.svelte";
-  import HanoiTowers from "./components/HanoiTowers.svelte";
-  import SquareRootButton from "./components/SquareRootButton.svelte";
-  import SquareRootBind from "./components/SquareRootBind.svelte";
-  import SpeedTyper from "./components/SpeedTyper.svelte";
+  import Counter from './components/Counter.svelte';
+  import HanoiTowers from './components/HanoiTowers.svelte';
+  import SquareRootButton from './components/SquareRootButton.svelte';
+  import SquareRootBind from './components/SquareRootBind.svelte';
+  import SpeedTyper from './components/SpeedTyper.svelte';
+  import ColorFill from './components/ColorFill.svelte';
 
   const count = writable(100);
-  const unsubscribe = count.subscribe(value => console.log("count", value));
+  const unsubscribe = count.subscribe(value => console.log('count', value));
 
   export let name: string;
   onMount(() => {
-    console.log("App mounted");
+    console.log('App mounted');
   });
 
   onDestroy(() => {
@@ -45,8 +46,10 @@
 <main>
   <h1>Hello {name}!</h1>
   <p>
-    <SpeedTyper />
     <!-- * Uncomment any component you want to see -->
+    <ColorFill rows={5} columns={5} />
+
+    <!-- <SpeedTyper /> -->
     <!-- <SquareRootButton /> -->
     <!-- <SquareRootBind /> -->
 

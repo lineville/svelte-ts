@@ -16,6 +16,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
+    "colorfill": "^1.0.0",
     "sirv-cli": "^0.4.4"
   },
   "scripts": {
