@@ -53,4 +53,4 @@ export const randomGrid = (rows: number, columns: number): Array<Array<string>> 
   return result;
 };
 
-export const colors = ['🟦', '🟧', '🟨', '🟩', '🟥', '🟪', '🟫'];
+export const colors = ['🔴', '💙', '💛', '☘️', '💜', '⬛️', '🔶', '📦'];
