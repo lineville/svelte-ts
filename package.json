@@ -16,7 +16,10 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
+    "@types/node": "^13.9.1",
     "colorfill": "^1.0.0",
+    "firebase": "^7.7.0",
+    "fireview": "0.0.8",
     "sirv-cli": "^0.4.4"
   },
   "scripts": {
