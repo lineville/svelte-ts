@@ -1,22 +1,23 @@
 <script lang="ts">
-  let userInput = "";
-  let textBlock = "The quick brown fox jumps over the lazy sheep dog.";
+  let userInput = '';
+  let textBlock = 'The quick brown fox jumps over the lazy sheep dog.';
   let currentWord = 0;
-  let words = textBlock.split(" ");
+  let words = textBlock.split(' ');
+  let completedWords: Array<string>;
+  let incompleteWords: Array<string>;
   $: completedWords = words.slice(0, currentWord);
   $: incompleteWords = words.slice(currentWord);
-  let inputBorderClass = "normal";
-  // let startTime = Time.now();
+  let inputBorderClass = 'normal';
 
   function handleKeydown(event: any) {
     if (event.keyCode == 32) {
       event.preventDefault();
       if (userInput === words[currentWord]) {
-        userInput = "";
+        userInput = '';
         currentWord++;
-        inputBorderClass = "normal";
+        inputBorderClass = 'normal';
       } else {
-        inputBorderClass = "warning";
+        inputBorderClass = 'warning';
       }
     }
   }
