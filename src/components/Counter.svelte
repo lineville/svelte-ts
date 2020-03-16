@@ -6,8 +6,16 @@
 <div>
   <slot>Default Counter</slot>
   <div>
-     {value}
-    <button class="uk-button uk-button-primary"  on:click={() => (value += step)}>+</button>
-    <button class="uk-button uk-button-secondary"  on:click={() => (value -= step)}>-</button>
+    {value}
+    <button
+      class="uk-button uk-button-primary"
+      on:click={() => (value += step)}>
+      +
+    </button>
+    <button
+      class="uk-button uk-button-secondary"
+      on:click={() => (value -= step)}>
+      -
+    </button>
   </div>
 </div>
