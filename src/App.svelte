@@ -49,8 +49,8 @@
   <p>
     <!-- * Uncomment any component you want to see -->
 
+    <ColorFill rows={10} columns={10} />
     <TaskList />
-    <!-- <ColorFill rows={5} columns={5} /> -->
     <!-- <SquareRootButton /> -->
     <!-- <SquareRootBind /> -->
     <!-- <ProfitCalculator /> -->

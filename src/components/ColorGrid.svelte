@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let grid: Array<Array<string>>;
+  export let grid: string[][];
 </script>
 
 <style>
