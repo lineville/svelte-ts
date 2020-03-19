@@ -1,10 +1,13 @@
 <script lang="ts">
+  // Dependencies
   import { colorFill, colors, randomGrid, completedGrid } from '../utils/ColorFill';
   import ColorGrid from './ColorGrid.svelte';
 
+  // Props
   export let height = 0;
   export let width = 0;
 
+  // State
   let row = 0;
   let column = 0;
   let newColor: string;
@@ -13,9 +16,11 @@
   let completed = false;
   const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
 
+  // Init random grid
   let grid: string[][];
   $: grid = randomGrid(width, height);
 
+  // Fill the grid
   function handleSubmit() {
     grid = colorFill(grid, { x: column, y: row }, newColor);
     fillCount++;
@@ -24,30 +29,40 @@
     }
   }
 
+  // Handle key presses
   function handleKeydown(event: KeyboardEvent) {
     if (!completed) {
       switch (event.keyCode) {
-        case 38: {
+        // up
+        case 38:
+        case 87: {
           column = column - 1 < 0 ? width - 1 : column - 1;
           moveCount++;
           break;
         }
-        case 40: {
+        // down
+        case 40:
+        case 83: {
           column = column + 1 > width - 1 ? 0 : column + 1;
           moveCount++;
           break;
         }
-        case 37: {
+        // left
+        case 37:
+        case 65: {
           row = row - 1 < 0 ? height - 1 : row - 1;
           moveCount++;
           break;
         }
-        case 39: {
+        // right
+        case 39:
+        case 68: {
           row = row + 1 > height - 1 ? 0 : row + 1;
           moveCount++;
           break;
         }
         case 13: {
+          // enter
           handleSubmit();
           break;
         }
@@ -58,6 +73,7 @@
     }
   }
 
+  // Reset state
   function reset() {
     row = 0;
     column = 0;
@@ -77,7 +93,8 @@
     display: flex;
   }
 
-  span {
+  span,
+  button {
     margin: 5px;
   }
 
@@ -101,14 +118,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+  }
+
+  .container {
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
 <svelte:window on:keydown={handleKeydown} />
 
-<div>
+<div class="container">
   <h1>Make them all the same color in as few fills as possible</h1>
-  <p>You can use the arrow keys and enter key to navigate the grid</p>
+  <p>
+    You can use the arrow keys or WASD to navigate the grid.
+    <br />
+    Pressing enter or the fill button will fill all cells that are the same color as the current cell with the new color
+    selected in the dropdown
+  </p>
 
   {#if completed}
     <div id="congrats">

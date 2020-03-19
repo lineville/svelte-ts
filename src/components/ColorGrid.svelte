@@ -13,12 +13,15 @@
 
   .selected {
     list-style-position: inside;
-    border: 1px solid green;
+    border: 1px solid black;
+    background: yellow;
   }
 
   #grid {
     position: relative;
     margin-top: 30px;
+    border-radius: 25px;
+    text-align: center;
   }
 
   .row {
