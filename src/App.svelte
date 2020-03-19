@@ -41,7 +41,7 @@
 </style>
 
 <main>
-  <h1>Svelte Components</h1>
+  <h1>Svelte TypeScript Components</h1>
   <p>
     <!-- * Uncomment any component you want to see -->
     <ColorFill width={20} height={20} />
