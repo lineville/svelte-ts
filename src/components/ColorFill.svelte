@@ -154,7 +154,7 @@
 
       <button type="submit" class="uk-button uk-button-primary" on:click={handleSubmit}>Fill</button>
       <span>Fills: {fillCount}</span>
-      <span>Total Moves: {moveCount}</span>
+      <span>Moves: {moveCount}</span>
     </div>
   {/if}
 
