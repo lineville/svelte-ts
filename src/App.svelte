@@ -9,6 +9,7 @@
   import SquareRootBind from './components/SquareRootBind.svelte';
   import ProfitCalculator from './components/ProfitCalculator.svelte';
   import ColorFill from './components/ColorFill.svelte';
+  import TaskList from './components/TaskList.svelte';
 
   const count = writable(100);
   const unsubscribe = count.subscribe(value => console.log('count', value));
@@ -49,6 +50,7 @@
     <!-- * Uncomment any component you want to see -->
 
     <ColorFill rows={10} columns={10} />
+    <TaskList />
     <!-- <SquareRootButton /> -->
     <!-- <SquareRootBind /> -->
     <!-- <ProfitCalculator /> -->
