@@ -25,33 +25,35 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case 38: {
-        column = column - 1 < 0 ? width - 1 : column - 1;
-        moveCount++;
-        break;
-      }
-      case 40: {
-        column = column + 1 > width - 1 ? 0 : column + 1;
-        moveCount++;
-        break;
-      }
-      case 37: {
-        row = row - 1 < 0 ? height - 1 : row - 1;
-        moveCount++;
-        break;
-      }
-      case 39: {
-        row = row + 1 > height - 1 ? 0 : row + 1;
-        moveCount++;
-        break;
-      }
-      case 13: {
-        handleSubmit();
-        break;
-      }
-      default: {
-        break;
+    if (!completed) {
+      switch (event.keyCode) {
+        case 38: {
+          column = column - 1 < 0 ? width - 1 : column - 1;
+          moveCount++;
+          break;
+        }
+        case 40: {
+          column = column + 1 > width - 1 ? 0 : column + 1;
+          moveCount++;
+          break;
+        }
+        case 37: {
+          row = row - 1 < 0 ? height - 1 : row - 1;
+          moveCount++;
+          break;
+        }
+        case 39: {
+          row = row + 1 > height - 1 ? 0 : row + 1;
+          moveCount++;
+          break;
+        }
+        case 13: {
+          handleSubmit();
+          break;
+        }
+        default: {
+          break;
+        }
       }
     }
   }
