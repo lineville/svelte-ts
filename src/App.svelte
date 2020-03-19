@@ -11,16 +11,12 @@
   import ColorFill from './components/ColorFill.svelte';
   import TaskList from './components/TaskList.svelte';
 
-  const count = writable(100);
-  const unsubscribe = count.subscribe(value => console.log('count', value));
+  //   const count = writable(100);
+  //   const unsubscribe = count.subscribe(value => console.log('count', value));
 
-  // export let name: string;
+  //   // export let name: string;
   onMount(() => {
     console.log('App mounted');
-  });
-
-  onDestroy(() => {
-    unsubscribe();
   });
 </script>
 
@@ -48,9 +44,9 @@
   <h1>Svelte Components</h1>
   <p>
     <!-- * Uncomment any component you want to see -->
-
-    <ColorFill rows={10} columns={10} />
-    <TaskList />
+    <ColorFill width={20} height={20} />
+    <!-- <ColorFill width={20} height={20} /> -->
+    <!-- <TaskList /> -->
     <!-- <SquareRootButton /> -->
     <!-- <SquareRootBind /> -->
     <!-- <ProfitCalculator /> -->

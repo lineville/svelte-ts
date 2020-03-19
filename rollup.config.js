@@ -39,7 +39,9 @@ export default {
       dedupe: importee =>
         importee === "svelte" || importee.startsWith("svelte/")
     }),
-    commonjs(),
+    commonjs({
+      include:"tests/**/*.test.ts"
+    }),
     typescript(),
 
     // Watch the `public` directory and refresh the
