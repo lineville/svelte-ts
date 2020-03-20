@@ -15,6 +15,7 @@
   let fillCount = 0;
   let moveCount = 0;
   let completed = false;
+  let teleportEnabled = false;
   const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
 
   // Init random grid
@@ -64,7 +65,8 @@
           moveCount++;
           break;
         }
-        case 13: {
+        case 13:
+        case 32: {
           // enter
           handleSubmit();
           break;
@@ -85,6 +87,12 @@
     completed = false;
     grid = randomGrid(width, height);
   }
+
+  // Moves directly to given location
+  function select(event: any) {
+    row = event.detail.x;
+    column = event.detail.y;
+  }
 </script>
 
 <style>
@@ -97,7 +105,8 @@
   }
 
   span,
-  button {
+  button,
+  input {
     margin: 10px 10px;
   }
 
@@ -125,8 +134,10 @@
   <p>
     You can use the arrow keys or WASD to navigate the grid.
     <br />
-    Pressing enter or the fill button will fill all cells that are the same color as the current cell with the new color
-    selected in the dropdown
+    Pressing enter, space or the fill button will fill all cells that are the same color as the current cell with the
+    new color selected in the dropdown
+    <br />
+    Cheat will let you click to teleport without counting it as a move
   </p>
 
   {#if !completed}
@@ -141,10 +152,14 @@
       <button type="submit" class="uk-button uk-button-primary" on:click={handleSubmit}>Fill</button>
       <span>Fills: {fillCount}</span>
       <span>Moves: {moveCount}</span>
+      <span>Location ({row}, {column})</span>
+
+      <input bind:value={teleportEnabled} type="checkbox" />
+      <label for="cheatToggle">Cheat</label>
     </div>
   {:else}
     <CongratsBanner {moveCount} {fillCount} on:reset={reset} />
   {/if}
 
-  <ColorGrid {grid} selectedRow={row} selectedColumn={column} />
+  <ColorGrid {grid} {teleportEnabled} selectedRow={row} selectedColumn={column} on:select={select} />
 </div>

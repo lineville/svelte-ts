@@ -1,7 +1,11 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher();
+
   export let grid: string[][];
-  export let selectedRow: 0;
-  export let selectedColumn: 0;
+  export let selectedRow: number;
+  export let selectedColumn: number;
+  export let teleportEnabled: boolean;
 </script>
 
 <style>
@@ -19,7 +23,7 @@
   .selected {
     list-style-position: inside;
     border: 2px solid black;
-    border-radius: 25%;
+    /* border-radius: 25%; */
     background: yellow;
   }
 
@@ -43,7 +47,15 @@
     {#each grid as row, idx1}
       <ul class="row">
         {#each row as col, idx2}
-          <li class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}>{grid[idx2][idx1]}</li>
+          {#if teleportEnabled}
+            <li
+              class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}
+              on:click={() => dispatch('select', { x: idx1, y: idx2 })}>
+              {grid[idx2][idx1]}
+            </li>
+          {:else}
+            <li class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}>{grid[idx2][idx1]}</li>
+          {/if}
         {/each}
       </ul>
     {/each}

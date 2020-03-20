@@ -9,6 +9,7 @@
   // import SquareRootBind from './components/SquareRootBind.svelte';
   // import ProfitCalculator from './components/ProfitCalculator.svelte';
   // import TaskList from './components/TaskList.svelte';
+  import GitHubCorner from './components/GitHubCorner.svelte';
   import ColorFill from './components/ColorFill.svelte';
 
   //   const count = writable(100);
@@ -41,6 +42,13 @@
 </style>
 
 <main>
+
+  <GitHubCorner
+    repositoryURL={'https://github.com/lineville/svelte-ts'}
+    openInNewTab={true}
+    color={'black'}
+    side={'right'} />
+
   <h1>Svelte TypeScript Components</h1>
   <!-- * Uncomment any component you want to see -->
   <ColorFill width={15} height={15} />
