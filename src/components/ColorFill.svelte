@@ -2,14 +2,15 @@
   // Dependencies
   import { colorFill, colors, randomGrid, completedGrid } from '../utils/ColorFill';
   import ColorGrid from './ColorGrid.svelte';
+  import CongratsBanner from './CongratsBanner.svelte';
 
   // Props
   export let height = 0;
   export let width = 0;
 
   // State
-  let row = 0;
-  let column = 0;
+  let row: number;
+  let column: number;
   let newColor: string;
   let fillCount = 0;
   let moveCount = 0;
@@ -18,7 +19,9 @@
 
   // Init random grid
   let grid: string[][];
-  $: grid = randomGrid(width, height);
+  grid = randomGrid(width, height);
+  row = Math.floor(Math.random() * height);
+  column = Math.floor(Math.random() * width);
 
   // Fill the grid
   function handleSubmit() {
@@ -109,18 +112,6 @@
     justify-content: center;
   }
 
-  #congrats {
-    background-color: rgb(87, 231, 87);
-    /* width: 80%; */
-    height: 80%;
-    margin: 20px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
   .container {
     align-items: center;
     justify-content: center;
@@ -138,12 +129,7 @@
     selected in the dropdown
   </p>
 
-  {#if completed}
-    <div id="congrats">
-      <h1>Congrats you did it in {moveCount} moves and {fillCount} fills!</h1>
-      <button class="uk-button uk-button-secondary" on:click={reset}>Reset</button>
-    </div>
-  {:else}
+  {#if !completed}
     <div id="userInputs">
       <label for="newColor">Color</label>
       <select bind:value={newColor} class="emojiPicker">
@@ -156,6 +142,8 @@
       <span>Fills: {fillCount}</span>
       <span>Moves: {moveCount}</span>
     </div>
+  {:else}
+    <CongratsBanner {moveCount} {fillCount} on:reset={reset} />
   {/if}
 
   <ColorGrid {grid} selectedRow={row} selectedColumn={column} />
