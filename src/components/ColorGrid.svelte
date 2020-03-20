@@ -11,9 +11,15 @@
     padding: 0;
   }
 
+  li {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
   .selected {
     list-style-position: inside;
-    border: 1px solid black;
+    border: 2px solid black;
+    border-radius: 25%;
     background: yellow;
   }
 
@@ -27,7 +33,7 @@
   .row {
     display: inline-block;
     text-align: center;
-    padding: 15px;
+    padding: 10px;
     text-decoration: none;
   }
 </style>

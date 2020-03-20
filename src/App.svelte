@@ -3,13 +3,13 @@
   import { writable } from 'svelte/store';
   import { myStore } from './store';
 
-  import Counter from './components/Counter.svelte';
-  import HanoiTowers from './components/HanoiTowers.svelte';
-  import SquareRootButton from './components/SquareRootButton.svelte';
-  import SquareRootBind from './components/SquareRootBind.svelte';
-  import ProfitCalculator from './components/ProfitCalculator.svelte';
+  // import Counter from './components/Counter.svelte';
+  // import HanoiTowers from './components/HanoiTowers.svelte';
+  // import SquareRootButton from './components/SquareRootButton.svelte';
+  // import SquareRootBind from './components/SquareRootBind.svelte';
+  // import ProfitCalculator from './components/ProfitCalculator.svelte';
+  // import TaskList from './components/TaskList.svelte';
   import ColorFill from './components/ColorFill.svelte';
-  import TaskList from './components/TaskList.svelte';
 
   //   const count = writable(100);
   //   const unsubscribe = count.subscribe(value => console.log('count', value));
@@ -43,7 +43,7 @@
 <main>
   <h1>Svelte TypeScript Components</h1>
   <!-- * Uncomment any component you want to see -->
-  <ColorFill width={20} height={20} />
+  <ColorFill width={15} height={15} />
   <!-- <ColorFill width={20} height={20} /> -->
   <!-- <TaskList /> -->
   <!-- <SquareRootButton /> -->

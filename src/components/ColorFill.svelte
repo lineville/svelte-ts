@@ -95,7 +95,7 @@
 
   span,
   button {
-    margin: 5px;
+    margin: 10px 10px;
   }
 
   .emojiPicker {
@@ -110,9 +110,9 @@
   }
 
   #congrats {
-    background-color: green;
-    width: 100%;
-    height: 100%;
+    background-color: rgb(87, 231, 87);
+    /* width: 80%; */
+    height: 80%;
     margin: 20px;
     padding: 20px;
     display: flex;
@@ -130,7 +130,7 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="container">
-  <h1>Make them all the same color in as few fills as possible</h1>
+  <h1>Make them all the same color in as few moves as possible</h1>
   <p>
     You can use the arrow keys or WASD to navigate the grid.
     <br />
