@@ -100,7 +100,7 @@
     completed = false;
     grid = randomGrid(width, height);
     seconds = 0;
-    setInterval(() => (seconds += 1), 1000);
+    setInterval(() => onTick, 1000);
   }
 
   // Moves directly to given location
