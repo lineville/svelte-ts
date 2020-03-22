@@ -1,0 +1,157 @@
+<script lang="ts">
+  // Dependencies
+  import { onDestroy } from 'svelte';
+  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../utils/ColorFill';
+  import { chomp } from '../utils/CandyChomper';
+  import ColorGrid from './ColorGrid.svelte';
+  import CongratsBanner from './CongratsBanner.svelte';
+
+  // Props
+  export let height = 0;
+  export let width = 0;
+
+  // State
+  let row: number;
+  let column: number;
+  let newColor: string;
+  let chomps = 0;
+  let moveCount = 0;
+  let completed = false;
+  let seconds = 0;
+  let teleportEnabled = false;
+  const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
+
+  // Init random grid
+  let grid: string[][];
+  grid = randomGrid(width, height);
+  console.log(grid);
+  row = Math.floor(Math.random() * height);
+  column = Math.floor(Math.random() * width);
+
+  // Set up timer
+  let interval = setInterval(onTick, 1000);
+  onDestroy(() => clearInterval(interval));
+
+  // Fill the grid
+  function handleSubmit() {
+    grid = chomp(grid, { x: column, y: row });
+    chomps++;
+    console.count('chomp');
+    if (completedGrid(grid)) {
+      completed = true;
+      clearInterval(interval);
+    }
+  }
+
+  // Executes every second
+  function onTick() {
+    seconds++;
+  }
+
+  // Handle key presses
+  function handleKeydown(event: KeyboardEvent) {
+    if (!completed) {
+      switch (event.keyCode) {
+        // up
+        case 38:
+        case 87: {
+          column = column - 1 < 0 ? width - 1 : column - 1;
+          moveCount++;
+          break;
+        }
+        // down
+        case 40:
+        case 83: {
+          column = column + 1 > width - 1 ? 0 : column + 1;
+          moveCount++;
+          break;
+        }
+        // left
+        case 37:
+        case 65: {
+          row = row - 1 < 0 ? height - 1 : row - 1;
+          moveCount++;
+          break;
+        }
+        // right
+        case 39:
+        case 68: {
+          row = row + 1 > height - 1 ? 0 : row + 1;
+          moveCount++;
+          break;
+        }
+        case 13:
+        case 32: {
+          // enter
+          handleSubmit();
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }
+  }
+
+  // Reset state
+  function reset() {
+    row = 0;
+    column = 0;
+    moveCount = 0;
+    completed = false;
+    grid = randomGrid(width, height);
+    seconds = 0;
+    setInterval(() => onTick, 1000);
+  }
+
+  // Moves directly to given location
+  function select(event: any) {
+    row = event.detail.x;
+    column = event.detail.y;
+  }
+</script>
+
+<style>
+  span,
+  button {
+    margin: 10px 10px;
+  }
+
+  #userInputs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<svelte:window on:keydown={handleKeydown} />
+
+<div class="container">
+  <h1>Candy Chomper</h1>
+  <p>
+    You can use the arrow keys or WASD to navigate the grid.
+    <br />
+    Try chomping the candy by pressing space, enter or the chomp button when you find three in a row!
+  </p>
+
+  {#if !completed}
+    <div id="userInputs">
+
+      <button type="submit" class="uk-button uk-button-primary" on:click={handleSubmit}>Chomp</button>
+      <span>Chomps: {chomps}</span>
+      <span>Moves: {moveCount}</span>
+      <span>Location: ({row}, {column})</span>
+      <span>Time: {seconds} seconds</span>
+    </div>
+  {:else}
+    <CongratsBanner {moveCount} {chomps} {seconds} on:reset={reset} />
+  {/if}
+
+  <ColorGrid {grid} {teleportEnabled} selectedRow={row} selectedColumn={column} on:select={select} />
+</div>
