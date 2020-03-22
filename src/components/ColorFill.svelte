@@ -1,6 +1,7 @@
 <script lang="ts">
   // Dependencies
-  import { colorFill, colors, randomGrid, completedGrid } from '../utils/ColorFill';
+  import { onDestroy } from 'svelte';
+  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../utils/ColorFill';
   import ColorGrid from './ColorGrid.svelte';
   import CongratsBanner from './CongratsBanner.svelte';
 
@@ -16,6 +17,7 @@
   let moveCount = 0;
   let completed = false;
   let teleportEnabled = false;
+  let seconds = 0;
   const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
 
   // Init random grid
@@ -24,13 +26,24 @@
   row = Math.floor(Math.random() * height);
   column = Math.floor(Math.random() * width);
 
+  // Set up timer
+  let interval = setInterval(onTick, 1000);
+  onDestroy(() => clearInterval(interval));
+
   // Fill the grid
   function handleSubmit() {
     grid = colorFill(grid, { x: column, y: row }, newColor);
     fillCount++;
     if (completedGrid(grid)) {
       completed = true;
+      clearInterval(interval);
     }
+  }
+
+  // Executes every second
+  function onTick() {
+    seconds++;
+    grid = shuffleGrid(grid);
   }
 
   // Handle key presses
@@ -86,6 +99,8 @@
     moveCount = 0;
     completed = false;
     grid = randomGrid(width, height);
+    seconds = 0;
+    setInterval(() => (seconds += 1), 1000);
   }
 
   // Moves directly to given location
@@ -152,13 +167,14 @@
       <button type="submit" class="uk-button uk-button-primary" on:click={handleSubmit}>Fill</button>
       <span>Fills: {fillCount}</span>
       <span>Moves: {moveCount}</span>
-      <span>Location ({row}, {column})</span>
+      <span>Location: ({row}, {column})</span>
+      <span>Time: {seconds} seconds</span>
 
       <input bind:value={teleportEnabled} type="checkbox" />
       <label for="cheatToggle">Cheat</label>
     </div>
   {:else}
-    <CongratsBanner {moveCount} {fillCount} on:reset={reset} />
+    <CongratsBanner {moveCount} {fillCount} {seconds} on:reset={reset} />
   {/if}
 
   <ColorGrid {grid} {teleportEnabled} selectedRow={row} selectedColumn={column} on:select={select} />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Reusable GitHub Corner API: 
+  // Reusable GitHub Corner API:
   //  Just include this file in src code and use component with following interface
   //  <GitHubCorner
   //     repositoryURL : string => url to link to

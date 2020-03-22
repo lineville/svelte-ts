@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   export let fillCount: number;
   export let moveCount: number;
+  export let seconds: number;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -23,6 +24,6 @@
 </style>
 
 <div id="congrats">
-  <h1>Congrats you did it in {moveCount} moves and {fillCount} fills!</h1>
+  <h1>Congrats you did it in {seconds} seconds, {moveCount} moves and {fillCount} fills!</h1>
   <button class="uk-button uk-button-secondary" on:click={() => dispatch('reset')}>Reset</button>
 </div>

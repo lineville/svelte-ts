@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
+  // Props
   export let grid: string[][];
   export let selectedRow: number;
   export let selectedColumn: number;
@@ -23,7 +24,6 @@
   .selected {
     list-style-position: inside;
     border: 2px solid black;
-    /* border-radius: 25%; */
     background: yellow;
   }
 

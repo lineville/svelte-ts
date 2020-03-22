@@ -59,3 +59,18 @@ export const completedGrid = (grid: string[][]): boolean => {
   const firstColor = grid[0][0];
   return grid.map(row => row.every(color => color === firstColor)).every(valid => valid);
 };
+
+export const shuffleGrid = (grid: string[][]): Array<Array<string>> => {
+  let result = new Array<Array<string>>();
+
+  for (let i = 0; i < grid.length; i++) {
+    let row = [];
+    for (let j = 0; j < grid[0].length; j++) {
+      let newRowIdx = i - 1 < 0 ? grid.length - 1 : i - 1;
+      row.push(grid[newRowIdx][j]);
+    }
+    result.push(row);
+  }
+
+  return result;
+};

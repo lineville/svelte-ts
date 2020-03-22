@@ -3,19 +3,9 @@
   import { writable } from 'svelte/store';
   import { myStore } from './store';
 
-  // import Counter from './components/Counter.svelte';
-  // import HanoiTowers from './components/HanoiTowers.svelte';
-  // import SquareRootButton from './components/SquareRootButton.svelte';
-  // import SquareRootBind from './components/SquareRootBind.svelte';
-  // import ProfitCalculator from './components/ProfitCalculator.svelte';
-  // import TaskList from './components/TaskList.svelte';
   import GitHubCorner from './components/GitHubCorner.svelte';
   import ColorFill from './components/ColorFill.svelte';
 
-  //   const count = writable(100);
-  //   const unsubscribe = count.subscribe(value => console.log('count', value));
-
-  //   // export let name: string;
   onMount(() => {
     console.log('App mounted');
   });
@@ -50,17 +40,6 @@
     side={'right'} />
 
   <h1>Svelte TypeScript Components</h1>
-  <!-- * Uncomment any component you want to see -->
   <ColorFill width={15} height={15} />
-  <!-- <ColorFill width={20} height={20} /> -->
-  <!-- <TaskList /> -->
-  <!-- <SquareRootButton /> -->
-  <!-- <SquareRootBind /> -->
-  <!-- <ProfitCalculator /> -->
-  <!-- <Counter /> -->
-  <!-- <HanoiTowers /> -->
-  <!-- <Counter value={1}>Counter 1</Counter>
-    <Counter bind:value={$count} step={3}>Counter 2</Counter>
-    <Counter bind:value={$myStore} step={5}>Counter 3</Counter> -->
 
 </main>
