@@ -1,4 +1,5 @@
-const expect = require('chai').expect;
+// const expect = require('chai').expect;
+import { expect } from 'chai';
 // const colorFill = require('../src/utils/ColorFill').colorFill;
 // const completedGrid = require('../src/utils/completedGrid').colorFill;
 import { colorFill, completedGrid } from '../src/utils/ColorFill';

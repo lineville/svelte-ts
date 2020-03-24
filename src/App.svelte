@@ -1,10 +1,11 @@
-<script lang="ts">
+<script>
   import { onMount, onDestroy } from 'svelte';
   import { writable } from 'svelte/store';
   import { myStore } from './store';
 
   import GitHubCorner from './components/GitHubCorner.svelte';
-  import ColorFill from './components/ColorFill.svelte';
+  // import ColorFill from './components/ColorFill.svelte';
+  import CandyChomper from './components/CandyChomper.svelte';
 
   onMount(() => {
     console.log('App mounted');
@@ -17,12 +18,6 @@
     padding: 1em;
     max-width: 240px;
     margin: 0 auto;
-  }
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
   }
   @media (min-width: 640px) {
     main {
@@ -39,7 +34,8 @@
     color={'black'}
     side={'right'} />
 
-  <h1>Svelte TypeScript Components</h1>
-  <ColorFill width={15} height={15} />
+  <!-- <h1>Svelte TypeScript Components</h1> -->
+  <CandyChomper width={15} height={15} />
+  <!-- <ColorFill width={15} height={15} /> -->
 
 </main>
