@@ -4,7 +4,6 @@
   import { myStore } from './store';
 
   import GitHubCorner from './components/GitHubCorner.svelte';
-  // import ColorFill from './components/ColorFill.svelte';
   import CandyChomper from './components/CandyChomper.svelte';
 
   onMount(() => {
@@ -35,7 +34,7 @@
     side={'right'} />
 
   <!-- <h1>Svelte TypeScript Components</h1> -->
-  <CandyChomper width={15} height={15} />
+  <CandyChomper width={15} height={15} numColors={4} />
   <!-- <ColorFill width={15} height={15} /> -->
 
 </main>

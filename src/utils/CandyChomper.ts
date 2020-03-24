@@ -32,13 +32,16 @@ export const swapCandies = (grid: Array<Array<string>>, location: Point): Array<
 
   // * Naively check potential future states in this order, in order to avoid swapping in
   // * an ambiguous case user would need designate the direction not just cell.
-  let locationToSwap = { x: location.x, y: location.y };
-  if (location.y > 0) {
-    locationToSwap.y - 1;
-  }
 
-  let futureGrid = swap(gridCopy, location, locationToSwap);
-  return gridCopy;
+  let futureGrids = [
+    swap(gridCopy, location, { x: location.x, y: location.y - 1 < 0 ? 0 : location.y - 1 }),
+    swap(gridCopy, location, { x: location.x, y: location.y + 1 == grid.length ? location.y : location.y + 1 }),
+    swap(gridCopy, location, { x: location.x - 1 < 0 ? 0 : location.x - 1, y: location.y }),
+    swap(gridCopy, location, { x: location.x + 1 == grid.length ? location.x : location.x + 1, y: location.y }),
+  ];
+
+  let bestOptions = futureGrids.filter(grid => canChomp(grid, location));
+  return bestOptions.length > 0 ? bestOptions[0] : grid;
 };
 
 export const swap = (grid: Array<Array<string>>, location: Point, other: Point): Array<Array<string>> => {
