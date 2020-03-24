@@ -53,7 +53,7 @@ export const randomGrid = (rows: number, columns: number): Array<Array<string>> 
   return result;
 };
 
-export const colors = ['🍉', '🏀', '☘️', '🔴', '💙', '💛', '💜', '📦'];
+export const colors = ['🍉', '🏀', '☘️', '🔴', '💙', '💛'];
 
 export const completedGrid = (grid: string[][]): boolean => {
   const firstColor = grid[0][0];

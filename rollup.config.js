@@ -6,7 +6,6 @@ import { terser } from "rollup-plugin-terser";
 import typescript from "@wessberg/rollup-plugin-ts";
 
 const svelteOptions = require("./svelte.config");
-
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
@@ -26,7 +25,8 @@ export default {
       // a separate file — better for performance
       css: css => {
         css.write("public/bundle.css");
-      }
+      },
+      preprocess: svelteOptions.preprocess
     }),
 
     // If you have external dependencies installed from
@@ -39,9 +39,7 @@ export default {
       dedupe: importee =>
         importee === "svelte" || importee.startsWith("svelte/")
     }),
-    commonjs({
-      include:"tests/**/*.test.ts"
-    }),
+    commonjs(),
     typescript(),
 
     // Watch the `public` directory and refresh the

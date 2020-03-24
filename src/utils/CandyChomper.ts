@@ -1,4 +1,4 @@
-import { Point } from './ColorFill';
+import { Point, colorFill } from './ColorFill';
 
 export const chomp = (grid: Array<Array<string>>, location: Point): Array<Array<string>> => {
   return canChomp(grid, location) ? chompCandy(grid, location) : grid;

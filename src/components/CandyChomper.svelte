@@ -14,6 +14,7 @@
   let row: number;
   let column: number;
   let newColor: string;
+  let grid: string[][];
   let chomps = 0;
   let moveCount = 0;
   let completed = false;
@@ -21,19 +22,20 @@
   let teleportEnabled = false;
   const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
 
-  // Init random grid
-  let grid: string[][];
-  grid = randomGrid(width, height);
-  console.log(grid);
-  row = Math.floor(Math.random() * height);
-  column = Math.floor(Math.random() * width);
-
   // Set up timer
+  const onTick = () => seconds++;
   let interval = setInterval(onTick, 1000);
   onDestroy(() => clearInterval(interval));
 
+  // Initialize grid
+  const init = (() => {
+    grid = randomGrid(width, height);
+    row = Math.floor(Math.random() * height);
+    column = Math.floor(Math.random() * width);
+  })();
+
   // Fill the grid
-  function handleSubmit() {
+  const handleSubmit = () => {
     grid = chomp(grid, { x: column, y: row });
     chomps++;
     console.count('chomp');
@@ -41,15 +43,10 @@
       completed = true;
       clearInterval(interval);
     }
-  }
-
-  // Executes every second
-  function onTick() {
-    seconds++;
-  }
+  };
 
   // Handle key presses
-  function handleKeydown(event: KeyboardEvent) {
+  const handleKeydown = (event: KeyboardEvent) => {
     if (!completed) {
       switch (event.keyCode) {
         // up
@@ -91,10 +88,10 @@
         }
       }
     }
-  }
+  };
 
   // Reset state
-  function reset() {
+  const reset = () => {
     row = 0;
     column = 0;
     moveCount = 0;
@@ -102,13 +99,13 @@
     grid = randomGrid(width, height);
     seconds = 0;
     setInterval(() => onTick, 1000);
-  }
+  };
 
   // Moves directly to given location
-  function select(event: any) {
+  const select = (event: any) => {
     row = event.detail.x;
     column = event.detail.y;
-  }
+  };
 </script>
 
 <style>
@@ -130,6 +127,7 @@
   }
 </style>
 
+<!-- Sets up key handler on the window -->
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="container">
