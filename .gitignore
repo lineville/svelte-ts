@@ -12,3 +12,4 @@ src/**/*.js.map
 yarn.lock
 .nyc_output
 .firebase
+.package.json.swp
