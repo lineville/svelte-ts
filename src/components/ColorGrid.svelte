@@ -12,6 +12,8 @@
 
   const [send, receive] = crossfade({
     duration: d => Math.sqrt(d * 200),
+    delay: 100,
+    easing: quintOut,
 
     fallback(node, params) {
       const style = getComputedStyle(node);
