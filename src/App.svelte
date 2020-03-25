@@ -34,7 +34,7 @@
     side={'right'} />
 
   <!-- <h1>Svelte TypeScript Components</h1> -->
-  <CandyChomper width={15} height={15} numColors={4} />
+  <CandyChomper width={8} height={8} numColors={3} />
   <!-- <ColorFill width={15} height={15} /> -->
 
 </main>

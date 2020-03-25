@@ -39,13 +39,13 @@ export const colorFill = (grid: Array<Array<string>>, location: Point, color: st
   return gridCopy;
 };
 
-export const randomGrid = (rows: number, columns: number): Array<Array<string>> => {
+export const randomGrid = (rows: number, columns: number, numColors: number): Array<Array<string>> => {
   let result = new Array<Array<string>>();
 
   for (let i = 0; i < rows; i++) {
     let row = [];
     for (let j = 0; j < columns; j++) {
-      row.push(colors[Math.floor(Math.random() * colors.length)]);
+      row.push(colors[Math.floor(Math.random() * numColors)]);
     }
     result.push(row);
   }
@@ -53,7 +53,7 @@ export const randomGrid = (rows: number, columns: number): Array<Array<string>> 
   return result;
 };
 
-export const colors = ['☘️', '🔴', '💙', '💛'];
+export const colors = ['☘️', '🔴', '💙', '💛', '\u{1F984}', '👽'];
 
 export const completedGrid = (grid: string[][]): boolean => {
   const firstColor = grid[0][0];

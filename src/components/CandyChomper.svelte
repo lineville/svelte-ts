@@ -2,13 +2,14 @@
   // Dependencies
   import { onDestroy } from 'svelte';
   import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../utils/ColorFill';
-  import { chomp } from '../utils/CandyChomper';
+  import { chomp, swapCandies } from '../utils/CandyChomper';
   import ColorGrid from './ColorGrid.svelte';
   import CongratsBanner from './CongratsBanner.svelte';
 
   // Props
   export let height = 0;
   export let width = 0;
+  export let numColors = 0;
 
   // State
   let row: number;
@@ -20,7 +21,7 @@
   let completed = false;
   let seconds = 0;
   let teleportEnabled = false;
-  const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
+  const colorOptions = colors.slice(0, numColors).map((c, i) => ({ id: i, color: c }));
 
   // Set up timer
   const onTick = () => seconds++;
@@ -29,16 +30,17 @@
 
   // Initialize grid
   const init = (() => {
-    grid = randomGrid(width, height);
+    grid = randomGrid(width, height, numColors);
     row = Math.floor(Math.random() * height);
     column = Math.floor(Math.random() * width);
   })();
 
   // Fill the grid
   const handleSubmit = () => {
+    grid = swapCandies(grid, { x: column, y: row });
+
     grid = chomp(grid, { x: column, y: row });
     chomps++;
-    console.count('chomp');
     if (completedGrid(grid)) {
       completed = true;
       clearInterval(interval);
@@ -96,7 +98,7 @@
     column = 0;
     moveCount = 0;
     completed = false;
-    grid = randomGrid(width, height);
+    grid = randomGrid(width, height, numColors);
     seconds = 0;
     setInterval(() => onTick, 1000);
   };
