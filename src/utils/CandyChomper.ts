@@ -1,21 +1,37 @@
-import { Point, colorFill } from './ColorFill';
+import { Point, colorFill, colors } from './ColorFill';
 
 export const chomp = (grid: Array<Array<string>>, location: Point): Array<Array<string>> => {
   return canChomp(grid, location) ? chompCandy(grid, location) : grid;
 };
 
 export const chompCandy = (grid: Array<Array<string>>, location: Point): Array<Array<string>> => {
-  let gridCopy = grid.map(row => {
-    return row.slice();
-  });
-  const candiesToChomp = adjacentMatches(gridCopy, location);
-  candiesToChomp.forEach(candy => {
-    gridCopy[candy.x][candy.y] = '💣';
+  let copy = copyGrid(grid);
+
+  let verticalsBottomUp = adjacentMatches(copy, location)
+    .concat([{ x: location.x, y: location.y }])
+    .filter(p => p.y === location.y)
+    .sort((a, b) => a.x - b.x);
+
+  let horizontalsExcludingCurrent = adjacentMatches(copy, location).filter(
+    p => p.x === location.x && p.y !== location.y,
+  );
+
+  [...verticalsBottomUp, ...horizontalsExcludingCurrent].forEach(candy => {
+    copy = deleteCandy(copy, { x: candy.x, y: candy.y });
   });
 
-  gridCopy[location.x][location.y] = '💣';
+  return copy;
+};
 
-  return gridCopy;
+export const deleteCandy = (grid: Array<Array<string>>, location: Point): Array<Array<string>> => {
+  let copy = copyGrid(grid);
+  let currentRowIdx = location.x;
+  while (currentRowIdx > 0) {
+    copy[currentRowIdx][location.y] = grid[currentRowIdx - 1][location.y];
+    currentRowIdx--;
+  }
+  copy[0][location.y] = ' ';
+  return copy;
 };
 
 export const canChomp = (grid: Array<Array<string>>, location: Point): boolean => {
@@ -56,12 +72,13 @@ export const swap = (grid: Array<Array<string>>, location: Point, other: Point):
 };
 
 export const adjacentMatches = (grid: Array<Array<string>>, location: Point): Array<Point> => {
-  return [
+  const allMatches = [
     ...searchUp(grid, location),
     ...searchDown(grid, location),
     ...searchLeft(grid, location),
     ...searchRight(grid, location),
   ];
+  return allMatches;
 };
 
 export const searchUp = (grid: Array<Array<string>>, location: Point): Array<Point> => {
@@ -106,4 +123,10 @@ export const searchRight = (grid: Array<Array<string>>, location: Point): Array<
     currentColumn++;
   }
   return result;
+};
+
+const copyGrid = (grid: Array<Array<string>>): Array<Array<string>> => {
+  return grid.map(row => {
+    return row.slice();
+  });
 };
