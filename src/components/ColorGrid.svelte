@@ -12,7 +12,7 @@
 
   const [send, receive] = crossfade({
     duration: d => Math.sqrt(d * 200),
-    delay: 100,
+    delay: 1000,
     easing: quintOut,
 
     fallback(node, params) {
@@ -73,15 +73,15 @@
             <li
               class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}
               on:click={() => dispatch('select', { x: idx1, y: idx2 })}
-              in:receive={{ key: idx2 }}
-              out:send={{ key: idx2 }}>
+              in:receive={{ key: `${idx1}-${idx2}` }}
+              out:send={{ key: `${idx1}-${idx2}` }}>
               {grid[idx2][idx1]}
             </li>
           {:else}
             <li
               class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}
-              in:receive={{ key: idx2 }}
-              out:send={{ key: idx2 }}>
+              in:receive={{ key: `${idx1}-${idx2}` }}
+              out:send={{ key: `${idx1}-${idx2}` }}>
               {grid[idx2][idx1]}
             </li>
           {/if}
