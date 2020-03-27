@@ -4,7 +4,8 @@
   import { myStore } from './store';
 
   import GitHubCorner from './components/GitHubCorner.svelte';
-  import CandyChomper from './components/CandyChomper.svelte';
+  import VirusStats from './components/VirusStats.svelte';
+  // import CandyChomper from './components/CandyChomper.svelte';
 
   onMount(() => {
     console.log('App mounted');
@@ -32,9 +33,9 @@
     openInNewTab={true}
     color={'black'}
     side={'right'} />
-
+  <VirusStats />
   <!-- <h1>Svelte TypeScript Components</h1> -->
-  <CandyChomper width={8} height={8} numColors={3} />
+  <!-- <CandyChomper width={8} height={8} numColors={3} /> -->
   <!-- <ColorFill width={15} height={15} /> -->
 
 </main>
