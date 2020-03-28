@@ -3,15 +3,15 @@
   import StatsTableDomestic from './StatsTableDomestic.svelte';
   const apiURL = 'https://corona.lmao.ninja/states/';
 
-  let data = [];
+  let data = new Array<{ state: string }>();
   let stateOptions = [];
   let selectedState = 'New York';
+  let selectedStateData = {};
 
-  // const handleChange = async (e: any) => {
-  //   selectedState = e.target.value;
-  //   let res = await fetch(apiURL + selectedState);
-  //   data = await res.json();
-  // };
+  const handleChange = async (e: any) => {
+    selectedState = e.target.value;
+    selectedStateData = data.filter(s => s.state === selectedState)[0] || {};
+  };
 
   onMount(async () => {
     console.log('Virus Stats Domestic Mounted');
@@ -22,6 +22,7 @@
         id: i,
         state: s.state,
       }));
+      selectedStateData = data.filter(s => s.state === selectedState)[0] || {};
     } catch (e) {
       console.error('error fetching data', e);
     }
@@ -35,17 +36,15 @@
   }
 </style>
 
-<div id="countries-list">
+<div id="states-list">
   <h5>
     Covid19 Stats for
-    <select bind:value={selectedState} class="countrySelector">
+    <select on:change={handleChange} value={selectedState} class="countrySelector">
       {#each stateOptions as option}
-        <option value={option.state}>
-          {option.state}
-        </option>
+        <option value={option.state}>{option.state}</option>
       {/each}
     </select>
   </h5>
-  <StatsTableDomestic cases={data} />
+  <StatsTableDomestic {...selectedStateData} />
 
 </div>

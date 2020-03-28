@@ -13,17 +13,17 @@
 
 <div>
   <h1>Coronavirus stats</h1>
-  <!-- <div class="switch">
+  <div class="switch">
     <label for="globalSwitch">{global ? 'Global' : 'Domestic'}</label>
     <Switch bind:checked={global} />
   </div>
 
-  <br /> -->
+  <br />
 
-  <!-- {#if global} -->
+  {#if global}
     <VirusGlobal />
-  <!-- {:else} -->
-    <!-- <VirusDomestic /> -->
-  <!-- {/if} -->
+  {:else}
+    <VirusDomestic />
+  {/if}
 
 </div>
