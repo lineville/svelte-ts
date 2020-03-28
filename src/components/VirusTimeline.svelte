@@ -35,9 +35,14 @@
           .map(country => createDataSet(country)),
       },
       options: {
+        legend: {
+          display: false,
+        },
         title: {
           text: 'Chart.js Time Scale',
         },
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           xAxes: [
             {
@@ -54,6 +59,9 @@
           ],
           yAxes: [
             {
+              ticks: {
+                max: 7000,
+              },
               scaleLabel: {
                 display: true,
                 labelString: 'Deaths',
@@ -84,6 +92,6 @@
   <h3>Timeline</h3>
   <!-- <label for="threshold">Threshold</label>
   <input type="number" bind:value={threshold} /> -->
-  <canvas id="timelineChart" bind:this={canvas} width={400} height={250} />
+  <canvas id="timelineChart" bind:this={canvas} />
 
 </div>
