@@ -1,13 +1,13 @@
 <script lang="ts">
-  export let deaths : number;
-  export let todayDeaths : number;
-  export let todayCases : number;
-  export let cases : number;
-  export let recovered : number;
-  export let active : number;
-  export let critical : number;
-  export let casesPerOneMillion : number;
-  export let deathsPerOneMillion : number;
+  export let deaths: number;
+  export let todayDeaths: number;
+  export let todayCases: number;
+  export let cases: number;
+  export let recovered: number;
+  export let active: number;
+  export let critical: number;
+  export let casesPerOneMillion: number;
+  export let deathsPerOneMillion: number;
 </script>
 
 <style>
@@ -24,39 +24,39 @@
 <table align="center">
   <tr>
     <td>Deaths</td>
-    <td>{deaths || "Loading..."}</td>
+    <td>{deaths || 'Loading...'}</td>
   </tr>
   <tr>
     <td>Deaths Today</td>
-    <td>{todayDeaths || "Loading..."}</td>
+    <td>{todayDeaths !== undefined ? todayDeaths : 'Loading...'}</td>
   </tr>
   <tr>
     <td>Cases Today</td>
-    <td>{todayCases || "Loading..."}</td>
+    <td>{todayCases !== undefined ? todayCases : 'Loading...'}</td>
   </tr>
   <tr>
     <td>Cases</td>
-    <td>{cases || "Loading..."}</td>
+    <td>{cases || 'Loading...'}</td>
   </tr>
   <tr>
     <td>Recovered</td>
-    <td>{recovered || "Loading..."}</td>
+    <td>{recovered || 'Loading...'}</td>
   </tr>
   <tr>
     <td>Active</td>
-    <td>{active || "Loading..."}</td>
+    <td>{active || 'Loading...'}</td>
   </tr>
   <tr>
     <td>Critical</td>
-    <td>{critical || "Loading..."}</td>
+    <td>{critical || 'Loading...'}</td>
   </tr>
   <tr>
     <td>Cases / Million</td>
-    <td>{casesPerOneMillion || "Loading..."}</td>
+    <td>{casesPerOneMillion || 'Loading...'}</td>
   </tr>
   <tr>
     <td>Deaths / Million</td>
-    <td>{deathsPerOneMillion || "Loading..."}</td>
+    <td>{deathsPerOneMillion || 'Loading...'}</td>
   </tr>
 
 </table>
