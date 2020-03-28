@@ -1,6 +1,6 @@
 <script>
   export let checked = false;
-  export const color = "#2196F3";
+  export const color = '#2196F3';
 </script>
 
 <style>
@@ -32,7 +32,7 @@
 
   .slider:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 26px;
     width: 26px;
     left: 4px;

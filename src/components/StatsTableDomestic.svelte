@@ -1,11 +1,9 @@
 <script lang="ts">
-  // export let data = [];
-
-  export let deaths: number;
-  export let todayDeaths: number;
-  export let todayCases: number;
-  export let cases: number;
-  export let active: number;
+  export let deaths = 0;
+  export let todayDeaths = 0;
+  export let todayCases = 0;
+  export let cases = 0;
+  export let active = 0;
 </script>
 
 <style>
@@ -22,23 +20,23 @@
 <table align="center">
   <tr>
     <td>Deaths</td>
-    <td>{deaths || 'Loading...'}</td>
+    <td>{deaths}</td>
   </tr>
   <tr>
     <td>Deaths Today</td>
-    <td>{todayDeaths !== undefined ? todayDeaths : 'Loading...'}</td>
+    <td>{todayDeaths}</td>
   </tr>
   <tr>
     <td>Cases Today</td>
-    <td>{todayCases !== undefined ? todayCases : 'Loading...'}</td>
+    <td>{todayCases}</td>
   </tr>
   <tr>
     <td>Cases</td>
-    <td>{cases || 'Loading...'}</td>
+    <td>{cases}</td>
   </tr>
   <tr>
     <td>Active</td>
-    <td>{active || 'Loading...'}</td>
+    <td>{active}</td>
   </tr>
 
 </table>
