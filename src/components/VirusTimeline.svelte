@@ -1,0 +1,89 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import Chart from 'chart.js';
+
+  let canvas: any;
+  let myChart: any;
+  let data: any = {};
+  let dates: string[] = [];
+  let threshold = 50;
+  const apiURL = 'https://pomber.github.io/covid19/timeseries.json';
+
+  const createDataSet = (
+    country: string,
+  ): { label: string; backgroundColor: string; borderColor: string; data: any[] } => {
+    let randColor = '#' + ((Math.random() * 0xffffff) << 0).toString(16);
+    let result = { label: country, backgroundColor: randColor, borderColor: randColor, fill: false, data: [] };
+    result.data = data[country].map((day: any) => ({ x: day.date, y: day.deaths }));
+    return result;
+  };
+
+  const totalDeaths = (country: string): number => {
+    let total = 0;
+    data[country].forEach((day: any) => {
+      total += day.deaths;
+    });
+    return total;
+  };
+
+  const generateChart = (ctx: any): Chart => {
+    return new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets: Object.keys(data)
+          .filter(country => totalDeaths(country) >= threshold)
+          .map(country => createDataSet(country)),
+      },
+      options: {
+        title: {
+          text: 'Chart.js Time Scale',
+        },
+        scales: {
+          xAxes: [
+            {
+              type: 'time',
+              time: {
+                parser: 'YYYY MM DD',
+                tooltipFormat: 'YYYY MM DD',
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Date',
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: 'Deaths',
+              },
+            },
+          ],
+        },
+      },
+    });
+  };
+
+  onMount(async () => {
+    console.log('Virus Timeline Mounted');
+    try {
+      let result = await fetch(apiURL);
+      data = await result.json();
+      dates = data[Object.keys(data)[0]].map((dataPoint: any) => dataPoint.date);
+    } catch (e) {
+      console.error('error fetching timeline data', e);
+    } finally {
+      const ctx = canvas.getContext('2d');
+      myChart = generateChart(ctx);
+    }
+  });
+</script>
+
+<div>
+  <h3>Timeline</h3>
+  <!-- <label for="threshold">Threshold</label>
+  <input type="number" bind:value={threshold} /> -->
+  <canvas id="timelineChart" bind:this={canvas} width={400} height={250} />
+
+</div>

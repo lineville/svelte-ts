@@ -23,7 +23,9 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
+    "@types/chart.js": "^2.9.16",
     "@types/node": "^13.9.1",
+    "chart.js": "^2.9.3",
     "sirv-cli": "^0.4.4"
   },
   "scripts": {

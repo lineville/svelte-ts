@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import StatsTable from './StatsTable.svelte';
+
   const apiURL = 'https://corona.lmao.ninja/countries/';
 
   let data = {};
@@ -15,6 +16,7 @@
 
   onMount(async () => {
     console.log('Virus Stats Global Mounted');
+
     try {
       let allCountries = await fetch(apiURL);
       countryOptions = await allCountries.json();
