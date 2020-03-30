@@ -2,7 +2,7 @@
   import VirusGlobal from './VirusGlobal.svelte';
   import VirusDomestic from './VirusDomestic.svelte';
   import VirusTimeline from './VirusTimeline.svelte';
-  import Switch from './Switch.svelte';
+  import Switch from '../Shared/Switch.svelte';
   let global = true;
   let showTimeline = false;
 </script>
@@ -15,7 +15,7 @@
 </style>
 
 <div>
-  <h1>Coronavirus stats</h1>
+  <h1>Covid-19 Stats by {global ? "Country" : "State"}</h1>
   {#if showTimeline}
     <button class="uk-button uk-button-primary" on:click={() => (showTimeline = false)}>Stats</button>
     <VirusTimeline />

@@ -6,7 +6,7 @@
   let myChart: any;
   let data: any = {};
   let dates: string[] = [];
-  let threshold = 50;
+  let threshold = 100;
   const apiURL = 'https://pomber.github.io/covid19/timeseries.json';
 
   const createDataSet = (
@@ -41,8 +41,7 @@
         title: {
           text: 'Chart.js Time Scale',
         },
-        responsive: true,
-        maintainAspectRatio: false,
+        // responsive: true,
         scales: {
           xAxes: [
             {
@@ -59,9 +58,9 @@
           ],
           yAxes: [
             {
-              ticks: {
-                max: 7000,
-              },
+              // ticks: {
+              //   max: 7000,
+              // },
               scaleLabel: {
                 display: true,
                 labelString: 'Deaths',
@@ -90,8 +89,7 @@
 
 <div>
   <h3>Timeline</h3>
-  <!-- <label for="threshold">Threshold</label>
-  <input type="number" bind:value={threshold} /> -->
+  <p>Note: Only displaying countries with at least {threshold} total deaths.</p>
   <canvas id="timelineChart" bind:this={canvas} />
 
 </div>

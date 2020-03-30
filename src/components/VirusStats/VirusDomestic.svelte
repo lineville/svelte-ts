@@ -38,7 +38,7 @@
 
 <div id="states-list">
   <h5>
-    Covid19 Stats for
+    State:
     <select on:change={handleChange} value={selectedState} class="countrySelector">
       {#each stateOptions as option}
         <option value={option.state}>{option.state}</option>

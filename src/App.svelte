@@ -3,8 +3,8 @@
   import { writable } from 'svelte/store';
   import { myStore } from './store';
 
-  import GitHubCorner from './components/GitHubCorner.svelte';
-  import VirusStats from './components/VirusStats.svelte';
+  import GitHubCorner from './components/Shared/GitHubCorner.svelte';
+  import VirusStats from './components/VirusStats/VirusStats.svelte';
   // import CandyChomper from './components/CandyChomper.svelte';
 
   onMount(() => {

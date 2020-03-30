@@ -1,7 +1,7 @@
 <script lang="ts">
   // Dependencies
   import { onDestroy } from 'svelte';
-  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../utils/ColorFill';
+  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill';
   import ColorGrid from './ColorGrid.svelte';
   import CongratsBanner from './CongratsBanner.svelte';
 

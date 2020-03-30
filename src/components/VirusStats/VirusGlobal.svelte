@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import StatsTable from './StatsTable.svelte';
+  import StatsTableGlobal from './StatsTableGlobal.svelte';
 
   const apiURL = 'https://corona.lmao.ninja/countries/';
 
@@ -42,7 +42,7 @@
 
 <div id="countries-list">
   <h5>
-    Covid19 Stats for
+    Country:
     <select on:change={handleChange} value={selectedCountry} class="countrySelector">
       {#each countryOptions as option}
         <option value={option.country}>
@@ -52,6 +52,6 @@
       {/each}
     </select>
   </h5>
-  <StatsTable {...data} />
+  <StatsTableGlobal {...data} />
 
 </div>
