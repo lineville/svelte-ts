@@ -6,6 +6,7 @@
   let myChart: any;
   let data: any = {};
   let dates: string[] = [];
+  let selectedMonths: number[] = [2, 3];
   let threshold = 100;
   const apiURL = 'https://pomber.github.io/covid19/timeseries.json';
 
@@ -14,8 +15,15 @@
   ): { label: string; backgroundColor: string; borderColor: string; data: any[] } => {
     let randColor = '#' + ((Math.random() * 0xffffff) << 0).toString(16);
     let result = { label: country, backgroundColor: randColor, borderColor: randColor, fill: false, data: [] };
-    result.data = data[country].map((day: any) => ({ x: day.date, y: day.deaths }));
+    result.data = data[country]
+      .filter((day: any) => shouldInclude(day, selectedMonths))
+      .map((day: any) => ({ x: day.date, y: day.deaths }));
+    console.log(data[country]);
     return result;
+  };
+
+  const shouldInclude = ({ date }: any, validMonths: Array<number>): boolean => {
+    return validMonths.includes(parseInt(date.split('-')[1]));
   };
 
   const totalDeaths = (country: string): number => {
@@ -90,6 +98,7 @@
 <div>
   <h3>Timeline</h3>
   <p>Note: Only displaying countries with at least {threshold} total deaths.</p>
+
   <canvas id="timelineChart" bind:this={canvas} />
 
 </div>
