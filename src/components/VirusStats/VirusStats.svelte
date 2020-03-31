@@ -8,31 +8,25 @@
 </script>
 
 <style>
-  button,
   .switch {
     margin: 10px 10px;
   }
 </style>
 
 <div>
-  <h1>Covid-19 Stats by {global ? "Country" : "State"}</h1>
-  {#if showTimeline}
-    <button class="uk-button uk-button-primary" on:click={() => (showTimeline = false)}>Stats</button>
-    <VirusTimeline />
+  <h3>Covid-19 Stats by {global ? 'Country' : 'State'}</h3>
+
+  <div class="switch" visible={showTimeline === false}>
+    <label for="globalSwitch">{global ? 'Global' : 'Domestic'}</label>
+    <Switch bind:checked={global} />
+  </div>
+
+  <br />
+
+  {#if global}
+    <VirusGlobal />
   {:else}
-    <div class="switch" visible={showTimeline === false}>
-      <label for="globalSwitch">{global ? 'Global' : 'Domestic'}</label>
-      <Switch bind:checked={global} />
-    </div>
-    <button class="uk-button uk-button-primary" on:click={() => (showTimeline = true)}>TimeLine</button>
-
-    <br />
-
-    {#if global}
-      <VirusGlobal />
-    {:else}
-      <VirusDomestic />
-    {/if}
+    <VirusDomestic />
   {/if}
 
 </div>

@@ -41,17 +41,16 @@
 </style>
 
 <div id="countries-list">
-  <h5>
-    Country:
-    <select on:change={handleChange} value={selectedCountry} class="countrySelector">
+  <span>
+    <select on:change={handleChange} value={selectedCountry} class="countrySelector custom-select">
       {#each countryOptions as option}
         <option value={option.country}>
           {option.country}
-          <img src={option.flag} alt={option.country} width={15} height={15} />
+          <!-- <img src={option.flag} alt={option.country} width={15} height={15} /> -->
         </option>
       {/each}
     </select>
-  </h5>
+  </span>
   <StatsTableGlobal {...data} />
 
 </div>

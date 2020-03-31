@@ -1,8 +1,8 @@
 <script lang="ts">
   // Dependencies
   import { onDestroy } from 'svelte';
-  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../utils/ColorFill';
-  import { chomp, swapCandies } from '../utils/CandyChomper';
+  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill';
+  import { chomp, swapCandies } from '../../utils/CandyChomper';
   import ColorGrid from './ColorGrid.svelte';
   import CongratsBanner from './CongratsBanner.svelte';
 
@@ -143,7 +143,7 @@
   {#if !completed}
     <div id="userInputs">
 
-      <button type="submit" class="uk-button uk-button-primary" on:click={handleSubmit}>Chomp</button>
+      <button type="submit" class="btn btn-primary" on:click={handleSubmit}>Chomp</button>
       <span>Chomps: {chomps}</span>
       <span>Moves: {moveCount}</span>
       <span>Location: ({row}, {column})</span>

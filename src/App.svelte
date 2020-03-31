@@ -4,8 +4,9 @@
   import { myStore } from './store';
 
   import GitHubCorner from './components/Shared/GitHubCorner.svelte';
-  import VirusStats from './components/VirusStats/VirusStats.svelte';
-  // import CandyChomper from './components/CandyChomper.svelte';
+  import Navbar from './components/Shared/Navbar.svelte';
+  import { Router } from 'svelte-router-spa';
+  import { routes } from './routes';
 
   onMount(() => {
     console.log('App mounted');
@@ -26,6 +27,7 @@
   }
 </style>
 
+<Navbar />
 <main>
 
   <GitHubCorner
@@ -33,7 +35,10 @@
     openInNewTab={true}
     color={'black'}
     side={'right'} />
-  <VirusStats />
+
+  <Router {routes} />
+
+  <!-- <VirusStats /> -->
   <!-- <h1>Svelte TypeScript Components</h1> -->
   <!-- <CandyChomper width={8} height={8} numColors={3} /> -->
   <!-- <ColorFill width={15} height={15} /> -->

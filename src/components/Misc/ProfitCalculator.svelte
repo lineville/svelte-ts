@@ -37,7 +37,5 @@
 
   <label for="availableBuys"># of Trades</label>
   <input name="availableBuys" type="number" bind:value={availableBuys} />
-  <button class="uk-button uk-button-primary" on:click={() => setProfit(prices, availableBuys)}>
-    Max Profit: {profit}
-  </button>
+  <button class="btn btn-primary" on:click={() => setProfit(prices, availableBuys)}>Max Profit: {profit}</button>
 </div>

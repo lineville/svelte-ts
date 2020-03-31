@@ -22,7 +22,7 @@
 
   // Init random grid
   let grid: string[][];
-  grid = randomGrid(width, height);
+  grid = randomGrid(width, height, 5);
   row = Math.floor(Math.random() * height);
   column = Math.floor(Math.random() * width);
 
@@ -98,7 +98,7 @@
     fillCount = 0;
     moveCount = 0;
     completed = false;
-    grid = randomGrid(width, height);
+    grid = randomGrid(width, height, 5);
     seconds = 0;
     setInterval(() => onTick, 1000);
   }
@@ -164,7 +164,7 @@
         {/each}
       </select>
 
-      <button type="submit" class="uk-button uk-button-primary" on:click={handleSubmit}>Fill</button>
+      <button type="submit" class="btn btn-primary" on:click={handleSubmit}>Fill</button>
       <span>Fills: {fillCount}</span>
       <span>Moves: {moveCount}</span>
       <span>Location: ({row}, {column})</span>

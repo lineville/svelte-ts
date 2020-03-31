@@ -26,14 +26,17 @@
     "@types/chart.js": "^2.9.16",
     "@types/node": "^13.9.1",
     "chart.js": "^2.9.3",
-    "sirv-cli": "^0.4.4"
+    "framework7": "^5.5.3",
+    "sirv-cli": "^0.4.4",
+    "svelte-router-spa": "^5.4.4",
+    "svelte-routing": "^1.4.2"
   },
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "run-p start:dev autobuild",
     "start": "sirv public",
-    "start:dev": "sirv public --dev",
+    "start:dev": "sirv public --dev -s",
     "test": "rollup -c && env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register tests/**/*.test.ts",
     "coverage": "nyc -r text -e .ts -x \"tests/*.test.ts\" npm run test"
   }

@@ -39,7 +39,7 @@
 <div id="states-list">
   <h5>
     State:
-    <select on:change={handleChange} value={selectedState} class="countrySelector">
+    <select on:change={handleChange} value={selectedState} class="countrySelector custom-select">
       {#each stateOptions as option}
         <option value={option.state}>{option.state}</option>
       {/each}

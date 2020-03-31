@@ -26,6 +26,7 @@ export default {
       css: css => {
         css.write("public/bundle.css");
       },
+      hydratable: true,
       preprocess: svelteOptions.preprocess
     }),
 

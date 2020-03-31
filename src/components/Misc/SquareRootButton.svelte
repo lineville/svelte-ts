@@ -9,5 +9,5 @@
 
 <div>
   <input type="number" width="50%" min={0} required bind:value={inputValue} />
-  <button class="uk-button uk-button-primary" on:click={() => squareRoot()}>Square Root: {outputValue}</button>
+  <button class="btn btn-primary" on:click={() => squareRoot()}>Square Root: {outputValue}</button>
 </div>
