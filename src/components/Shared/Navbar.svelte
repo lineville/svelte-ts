@@ -1,5 +1,6 @@
 <script lang="ts">
   const links = ['Stats', 'Timeline']
+  // const links = ['Stats', 'Timeline', 'ColorFill', 'CandyChomper']
 </script>
 
 <style>
