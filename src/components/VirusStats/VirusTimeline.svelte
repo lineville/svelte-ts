@@ -49,7 +49,7 @@
         title: {
           text: 'Chart.js Time Scale',
         },
-        // responsive: true,
+        responsive: true,
         scales: {
           xAxes: [
             {
@@ -66,9 +66,6 @@
           ],
           yAxes: [
             {
-              // ticks: {
-              //   max: 7000,
-              // },
               scaleLabel: {
                 display: true,
                 labelString: 'Deaths',
@@ -107,6 +104,8 @@
   <input type="number" bind:value={threshold} />
   <button class="btn btn-primary" on:click={refreshGrid}>Refresh Chart</button>
 
-  <canvas id="timelineChart" bind:this={canvas} />
+  <div class="chart-container" style="position: relative; height:90vh; width:95vw">
+    <canvas id="timelineChart" bind:this={canvas} />
+  </div>
 
 </div>
