@@ -14,18 +14,7 @@
   }
 </script>
 
-<style>
-  tr {
-    text-align: left;
-  }
-
-  td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-</style>
-
-<table align="center">
+<table class="table is-hoverable" align="center">
   <tr>
     <td>Deaths</td>
     <td>{cleanData(deaths)}</td>

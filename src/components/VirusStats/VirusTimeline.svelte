@@ -3,6 +3,7 @@
   import Chart from 'chart.js'
 
   const apiURL = 'https://pomber.github.io/covid19/timeseries.json'
+  const yAxesOptions = ['deaths', 'confirmed', 'recovered']
 
   let canvas: any
   let chart: any
@@ -11,6 +12,7 @@
   let countries: string[] = []
   let selectedMonths: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   let threshold = 500
+  let dataSelection = 'deaths'
 
   const createDataSet = (
     country: string,
@@ -19,7 +21,7 @@
     let result = { label: country, backgroundColor: randColor, borderColor: randColor, fill: false, data: [] }
     result.data = data[country]
       .filter((day: any) => shouldInclude(day, selectedMonths))
-      .map((day: any) => ({ x: day.date, y: day.deaths }))
+      .map((day: any) => ({ x: day.date, y: day[dataSelection] }))
     return result
   }
 
@@ -68,7 +70,7 @@
             {
               scaleLabel: {
                 display: true,
-                labelString: 'Deaths',
+                labelString: dataSelection,
               },
             },
           ],
@@ -78,6 +80,7 @@
   }
 
   const refreshGrid = () => {
+    chart.destroy()
     chart = generateChart()
   }
 
@@ -98,12 +101,46 @@
   })
 </script>
 
-<div>
-  <h3>Timeline</h3>
-  <p>Note: Only displaying countries with at least {threshold} total deaths.</p>
-  <input type="number" bind:value={threshold} />
-  <button class="btn btn-primary" on:click={refreshGrid}>Refresh Chart</button>
+<style>
+  label {
+    /* Hack to center the form */
+    padding-left: 25vw;
+  }
+</style>
 
+<div>
+  <h1>Timeline</h1>
+
+  <div class="field is-grouped is-grouped-centered">
+    <div class="field-label">
+      <label class="label">Threshold</label>
+    </div>
+    <div class="field-body">
+      <div class="field is-narrow">
+        <p class="control">
+          <input class="input is-info" type="number" bind:value={threshold} />
+        </p>
+      </div>
+      <div class="field has-addons">
+        <div class="control">
+          <div class="select">
+            <select bind:value={dataSelection}>
+              {#each yAxesOptions as dataSelection}
+                <option>{dataSelection}</option>
+              {/each}
+            </select>
+          </div>
+        </div>
+        <div class="control">
+          <button type="submit" class="button is-primary" on:click={refreshGrid}>Refresh Chart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Only displaying countries with at least {threshold} total {dataSelection}</h2>
+
+  <!-- CHART -->
   <div class="chart-container" style="position: relative; height:90vh; width:95vw">
     <canvas id="timelineChart" bind:this={canvas} />
   </div>

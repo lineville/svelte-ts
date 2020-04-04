@@ -18,7 +18,7 @@
     try {
       let res = await fetch(apiURL)
       data = await res.json()
-      stateOptions = data.map((s: any, i: number) => ({
+      stateOptions = data.sort().map((s: any, i: number) => ({
         id: i,
         state: s.state,
       }))
@@ -29,19 +29,16 @@
   })
 </script>
 
-<style>
-  .countrySelector {
-    height: 35px;
-    width: 140px;
-  }
-</style>
-
-<div id="states-list">
-  <select on:change={handleChange} value={selectedState} class="countrySelector custom-select">
-    {#each stateOptions as option}
-      <option value={option.state}>{option.state}</option>
-    {/each}
-  </select>
-  <StatsTableDomestic {...selectedStateData} />
-
+<div id="countries-list is-center" class="field is-grouped is-grouped-centered is-narrow">
+  <p class="control">
+    <span class="select">
+      <select on:change={handleChange} value={selectedState}>
+        {#each stateOptions as option}
+          <option value={option.state}>{option.state}</option>
+        {/each}
+      </select>
+    </span>
+  </p>
 </div>
+
+<StatsTableDomestic {...selectedStateData} />

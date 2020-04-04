@@ -1,51 +1,51 @@
 <script lang="ts">
   // Dependencies
-  import { onDestroy } from 'svelte';
-  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill';
-  import { chomp, swapCandies } from '../../utils/CandyChomper';
-  import ColorGrid from './ColorGrid.svelte';
-  import CongratsBanner from './CongratsBanner.svelte';
+  import { onDestroy } from 'svelte'
+  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill'
+  import { chomp, swapCandies } from '../../utils/CandyChomper'
+  import ColorGrid from './ColorGrid.svelte'
+  import CongratsBanner from './CongratsBanner.svelte'
 
   // Props
-  export let height = 0;
-  export let width = 0;
-  export let numColors = 0;
+  export let height = 0
+  export let width = 0
+  export let numColors = 0
 
   // State
-  let row: number;
-  let column: number;
-  let newColor: string;
-  let grid: string[][];
-  let chomps = 0;
-  let moveCount = 0;
-  let completed = false;
-  let seconds = 0;
-  let teleportEnabled = false;
-  const colorOptions = colors.slice(0, numColors).map((c, i) => ({ id: i, color: c }));
+  let row: number
+  let column: number
+  let newColor: string
+  let grid: string[][]
+  let chomps = 0
+  let moveCount = 0
+  let completed = false
+  let seconds = 0
+  let teleportEnabled = false
+  const colorOptions = colors.slice(0, numColors).map((c, i) => ({ id: i, color: c }))
 
   // Set up timer
-  const onTick = () => seconds++;
-  let interval = setInterval(onTick, 1000);
-  onDestroy(() => clearInterval(interval));
+  const onTick = () => seconds++
+  let interval = setInterval(onTick, 1000)
+  onDestroy(() => clearInterval(interval))
 
   // Initialize grid
   const init = (() => {
-    grid = randomGrid(width, height, numColors);
-    row = Math.floor(Math.random() * height);
-    column = Math.floor(Math.random() * width);
-  })();
+    grid = randomGrid(width, height, numColors)
+    row = Math.floor(Math.random() * height)
+    column = Math.floor(Math.random() * width)
+  })()
 
   // Fill the grid
   const handleSubmit = () => {
-    grid = swapCandies(grid, { x: column, y: row });
+    grid = swapCandies(grid, { x: column, y: row })
 
-    grid = chomp(grid, { x: column, y: row });
-    chomps++;
+    grid = chomp(grid, { x: column, y: row })
+    chomps++
     if (completedGrid(grid)) {
-      completed = true;
-      clearInterval(interval);
+      completed = true
+      clearInterval(interval)
     }
-  };
+  }
 
   // Handle key presses
   const handleKeydown = (event: KeyboardEvent) => {
@@ -54,60 +54,60 @@
         // up
         case 38:
         case 87: {
-          column = column - 1 < 0 ? width - 1 : column - 1;
-          moveCount++;
-          break;
+          column = column - 1 < 0 ? width - 1 : column - 1
+          moveCount++
+          break
         }
         // down
         case 40:
         case 83: {
-          column = column + 1 > width - 1 ? 0 : column + 1;
-          moveCount++;
-          break;
+          column = column + 1 > width - 1 ? 0 : column + 1
+          moveCount++
+          break
         }
         // left
         case 37:
         case 65: {
-          row = row - 1 < 0 ? height - 1 : row - 1;
-          moveCount++;
-          break;
+          row = row - 1 < 0 ? height - 1 : row - 1
+          moveCount++
+          break
         }
         // right
         case 39:
         case 68: {
-          row = row + 1 > height - 1 ? 0 : row + 1;
-          moveCount++;
-          break;
+          row = row + 1 > height - 1 ? 0 : row + 1
+          moveCount++
+          break
         }
         case 13:
         case 32: {
           // enter
-          handleSubmit();
-          break;
+          handleSubmit()
+          break
         }
         default: {
-          break;
+          break
         }
       }
     }
-  };
+  }
 
   // Reset state
   const reset = () => {
-    row = 0;
-    column = 0;
-    moveCount = 0;
-    completed = false;
-    grid = randomGrid(width, height, numColors);
-    seconds = 0;
-    setInterval(() => onTick, 1000);
-  };
+    row = 0
+    column = 0
+    moveCount = 0
+    completed = false
+    grid = randomGrid(width, height, numColors)
+    seconds = 0
+    setInterval(() => onTick, 1000)
+  }
 
   // Moves directly to given location
   const select = (event: any) => {
-    row = event.detail.x;
-    column = event.detail.y;
-  };
+    row = event.detail.x
+    column = event.detail.y
+  }
 </script>
 
 <style>

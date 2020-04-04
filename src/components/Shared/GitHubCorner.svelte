@@ -8,12 +8,12 @@
   //     side: Side: left or right => indicates if badge is on top left or top right
   //  />
 
-  type Color = 'black' | 'white' | 'green' | 'blue' | 'red';
-  type Side = 'left' | 'right';
-  export let repositoryURL: string;
-  export let openInNewTab: boolean;
-  export let color: Color;
-  export let side: Side;
+  type Color = 'black' | 'white' | 'green' | 'blue' | 'red'
+  type Side = 'left' | 'right'
+  export let repositoryURL: string
+  export let openInNewTab: boolean
+  export let color: Color
+  export let side: Side
 </script>
 
 <style>
@@ -46,6 +46,7 @@
     position: absolute;
     top: 0;
     border: 0;
+    z-index: 2;
   }
 
   .black {
