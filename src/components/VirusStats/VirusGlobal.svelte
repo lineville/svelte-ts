@@ -6,7 +6,7 @@
 
   let data = {}
   let countryOptions = []
-  let selectedCountry = 'China'
+  let selectedCountry = 'USA'
 
   const handleChange = async (e: any) => {
     selectedCountry = e.target.value
