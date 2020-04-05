@@ -11,7 +11,7 @@
   let dates: string[] = []
   let countries: string[] = []
   let selectedMonths: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  let threshold = 500
+  let threshold = 1000
   let dataSelection = 'deaths'
 
   const createDataSet = (
