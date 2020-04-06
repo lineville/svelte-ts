@@ -8,6 +8,10 @@
   button {
     border: none;
   }
+
+  .navbar {
+    opacity: 90%;
+  }
 </style>
 
 <nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
@@ -35,10 +39,6 @@
         <a class="navbar-item" href="/{link}" rel="noopener">{emojis[idx]} {link}</a>
       {/each}
 
-    </div>
-
-    <div class="navbar-end">
-
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">🕹️ Time Killers</a>
 
@@ -49,18 +49,26 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="navbar-end">
+
       <a class="navbar-item" href="https://medium.com/@lineville" target="_blank" rel="noopener">
         <span class="icon is-medium">
           <i class="fab fa-medium" />
         </span>
         <span>Blog</span>
       </a>
+      <hr class="navbar-divider" />
       <a class="navbar-item" href="https://github.com/lineville/svelte-ts" target="_blank" rel="noopener">
         <span class="icon is-medium">
           <i class="fab fa-github" />
         </span>
         <span>GitHub</span>
       </a>
+
+      <a class="navbar-item" href="https://lineville.github.io/portfolio/" target="_blank" rel="noopener">👋 Me</a>
+
     </div>
   </div>
 </nav>
