@@ -31,18 +31,18 @@
   <div id="navbarBasicExample" class="navbar-menu" class:is-active={mobileView}>
     <div class="navbar-start">
       {#each links as link}
-        <a class="navbar-item" href="/{link}">{link}</a>
+        <a class="navbar-item" href="/{link}" rel="noopener">{link}</a>
       {/each}
     </div>
     <div class="navbar-end">
 
-      <a class="navbar-item" href="https://medium.com/@lineville" target="_blank">
+      <a class="navbar-item" href="https://medium.com/@lineville" target="_blank" rel="noopener">
         <span class="icon is-medium">
           <i class="fab fa-medium" />
         </span>
         <span>Blog</span>
       </a>
-      <a class="navbar-item" href="https://github.com/lineville/svelte-ts" target="_blank">
+      <a class="navbar-item" href="https://github.com/lineville/svelte-ts" target="_blank" rel="noopener">
         <span class="icon is-medium">
           <i class="fab fa-github" />
         </span>
