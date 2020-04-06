@@ -1,10 +1,6 @@
-# Typescript template for Svelte v3
+# Svelte 3 + Typescript + Bulma ![badge](https://action-badges.now.sh/lineville/svelte-ts) [Demo](https://svelte-ts.firebaseapp.com/)
 
----
-
-# svelte-ts ![badge](https://action-badges.now.sh/lineville/GetStuffDone) [Demo](https://svelte-ts.firebaseapp.com/)
-
-This is a sandbox to develop Svelte 3 components in TypeScript [Svelte](https://svelte.dev) apps. It lives at https://github.com/pyoner/svelte-typescript
+This is a hobby project built with Svelte 3 components in TypeScript [Svelte](https://svelte.dev) apps. It is based on the following boilerplate [Starter-Kit](https://github.com/lineville/svelte-typescript-template) I created built on top of the popular one supplied by pyoner.
 
 ## Setup
 
@@ -13,4 +9,11 @@ git clone https://github.com/lineville/svelte-ts
 cd svelte-ts
 npm i
 npm run dev
+```
+
+## Testing
+
+```zsh
+npm run test
+npm run coverage
 ```
