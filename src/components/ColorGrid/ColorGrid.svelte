@@ -1,34 +1,34 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { quintOut } from 'svelte/easing';
-  import { crossfade } from 'svelte/transition';
-  const dispatch = createEventDispatcher();
+  import { createEventDispatcher } from 'svelte'
+  // import { quintOut } from 'svelte/easing'
+  // import { crossfade } from 'svelte/transition'
+  const dispatch = createEventDispatcher()
 
   // Props
-  export let grid: string[][];
-  export let selectedRow: number;
-  export let selectedColumn: number;
-  export let teleportEnabled: boolean;
+  export let grid: string[][]
+  export let selectedRow: number
+  export let selectedColumn: number
+  export let teleportEnabled: boolean
 
-  const [send, receive] = crossfade({
-    duration: d => Math.sqrt(d * 200),
-    delay: 1000,
-    easing: quintOut,
+  // const [send, receive] = crossfade({
+  //   duration: d => Math.sqrt(d * 200),
+  //   delay: 1000,
+  //   easing: quintOut,
 
-    fallback(node, params) {
-      const style = getComputedStyle(node);
-      const transform = style.transform === 'none' ? '' : style.transform;
+  //   fallback(node, params) {
+  //     const style = getComputedStyle(node)
+  //     const transform = style.transform === 'none' ? '' : style.transform
 
-      return {
-        duration: 600,
-        easing: quintOut,
-        css: t => `
-					transform: ${transform} scale(${t});
-					opacity: ${t}
-				`,
-      };
-    },
-  });
+  //     return {
+  //       duration: 600,
+  //       easing: quintOut,
+  //       css: t => `
+  // 				transform: ${transform} scale(${t});
+  // 				opacity: ${t}
+  // 			`,
+  //     }
+  //   },
+  // })
 </script>
 
 <style>
@@ -72,18 +72,11 @@
           {#if teleportEnabled}
             <li
               class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}
-              on:click={() => dispatch('select', { x: idx1, y: idx2 })}
-              in:receive={{ key: `${idx1}-${idx2}` }}
-              out:send={{ key: `${idx1}-${idx2}` }}>
+              on:click={() => dispatch('select', { x: idx1, y: idx2 })}>
               {grid[idx2][idx1]}
             </li>
           {:else}
-            <li
-              class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}
-              in:receive={{ key: `${idx1}-${idx2}` }}
-              out:send={{ key: `${idx1}-${idx2}` }}>
-              {grid[idx2][idx1]}
-            </li>
+            <li class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}>{grid[idx2][idx1]}</li>
           {/if}
         {/each}
       </ul>
