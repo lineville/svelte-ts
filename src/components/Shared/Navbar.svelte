@@ -9,7 +9,7 @@
   }
 </style>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
 
     <button
