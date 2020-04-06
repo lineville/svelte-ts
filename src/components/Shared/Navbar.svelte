@@ -1,5 +1,5 @@
 <script lang="ts">
-  const links = ['Stats', 'Timeline', 'CandyChomper']
+  const links = ['Stats', 'Timeline']
   let mobileView = false
 </script>
 
