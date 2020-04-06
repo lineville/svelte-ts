@@ -1,5 +1,6 @@
 <script lang="ts">
   const links = ['Stats', 'Timeline']
+  const emojis = ['🌐', '🗠']
   let mobileView = false
 </script>
 
@@ -30,11 +31,23 @@
 
   <div id="navbarBasicExample" class="navbar-menu" class:is-active={mobileView}>
     <div class="navbar-start">
-      {#each links as link}
-        <a class="navbar-item" href="/{link}" rel="noopener">{link}</a>
+      {#each links as link, idx}
+        <a class="navbar-item" href="/{link}" rel="noopener">{emojis[idx]} {link}</a>
       {/each}
+
     </div>
+
     <div class="navbar-end">
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link" href="/">🕹️ Time Killers</a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/colorfill" rel="noopener">🌈 Color Fill</a>
+          <hr class="navbar-divider" />
+          <a class="navbar-item" href="/candychomper" rel="noopener">🍬 Candy Chomper</a>
+        </div>
+      </div>
 
       <a class="navbar-item" href="https://medium.com/@lineville" target="_blank" rel="noopener">
         <span class="icon is-medium">

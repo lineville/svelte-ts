@@ -1,49 +1,49 @@
 <script lang="ts">
   // Dependencies
-  import { onDestroy } from 'svelte';
-  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill';
-  import ColorGrid from './ColorGrid.svelte';
-  import CongratsBanner from './CongratsBanner.svelte';
+  import { onDestroy } from 'svelte'
+  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill'
+  import ColorGrid from './ColorGrid.svelte'
+  import CongratsBanner from './CongratsBanner.svelte'
 
   // Props
-  export let height = 0;
-  export let width = 0;
+  export let height = 15
+  export let width = 15
 
   // State
-  let row: number;
-  let column: number;
-  let newColor: string;
-  let fillCount = 0;
-  let moveCount = 0;
-  let completed = false;
-  let teleportEnabled = false;
-  let seconds = 0;
-  const colorOptions = colors.map((c, i) => ({ id: i, color: c }));
+  let row: number
+  let column: number
+  let newColor: string
+  let fillCount = 0
+  let moveCount = 0
+  let completed = false
+  let teleportEnabled = false
+  let seconds = 0
+  const colorOptions = colors.map((c, i) => ({ id: i, color: c }))
 
   // Init random grid
-  let grid: string[][];
-  grid = randomGrid(width, height, 5);
-  row = Math.floor(Math.random() * height);
-  column = Math.floor(Math.random() * width);
+  let grid: string[][]
+  grid = randomGrid(width, height, 5)
+  row = Math.floor(Math.random() * height)
+  column = Math.floor(Math.random() * width)
 
   // Set up timer
-  let interval = setInterval(onTick, 1000);
-  onDestroy(() => clearInterval(interval));
+  let interval = setInterval(onTick, 1000)
+  onDestroy(() => clearInterval(interval))
 
   // Fill the grid
   function handleSubmit() {
-    grid = colorFill(grid, { x: column, y: row }, newColor);
-    fillCount++;
+    grid = colorFill(grid, { x: column, y: row }, newColor)
+    fillCount++
     if (completedGrid(grid)) {
-      completed = true;
-      clearInterval(interval);
+      completed = true
+      clearInterval(interval)
     }
   }
 
   // Executes every second
   function onTick() {
-    seconds++;
-    grid = shuffleGrid(grid);
+    seconds++
+    grid = shuffleGrid(grid)
   }
 
   // Handle key presses
@@ -53,39 +53,39 @@
         // up
         case 38:
         case 87: {
-          column = column - 1 < 0 ? width - 1 : column - 1;
-          moveCount++;
-          break;
+          column = column - 1 < 0 ? width - 1 : column - 1
+          moveCount++
+          break
         }
         // down
         case 40:
         case 83: {
-          column = column + 1 > width - 1 ? 0 : column + 1;
-          moveCount++;
-          break;
+          column = column + 1 > width - 1 ? 0 : column + 1
+          moveCount++
+          break
         }
         // left
         case 37:
         case 65: {
-          row = row - 1 < 0 ? height - 1 : row - 1;
-          moveCount++;
-          break;
+          row = row - 1 < 0 ? height - 1 : row - 1
+          moveCount++
+          break
         }
         // right
         case 39:
         case 68: {
-          row = row + 1 > height - 1 ? 0 : row + 1;
-          moveCount++;
-          break;
+          row = row + 1 > height - 1 ? 0 : row + 1
+          moveCount++
+          break
         }
         case 13:
         case 32: {
           // enter
-          handleSubmit();
-          break;
+          handleSubmit()
+          break
         }
         default: {
-          break;
+          break
         }
       }
     }
@@ -93,20 +93,20 @@
 
   // Reset state
   function reset() {
-    row = 0;
-    column = 0;
-    fillCount = 0;
-    moveCount = 0;
-    completed = false;
-    grid = randomGrid(width, height, 5);
-    seconds = 0;
-    setInterval(() => onTick, 1000);
+    row = 0
+    column = 0
+    fillCount = 0
+    moveCount = 0
+    completed = false
+    grid = randomGrid(width, height, 5)
+    seconds = 0
+    setInterval(() => onTick, 1000)
   }
 
   // Moves directly to given location
   function select(event: any) {
-    row = event.detail.x;
-    column = event.detail.y;
+    row = event.detail.x
+    column = event.detail.y
   }
 </script>
 
@@ -124,9 +124,9 @@
   input {
     margin: 10px 10px;
   }
-
   .emojiPicker {
-    height: 50px;
+    height: 40px;
+    width: 70px;
   }
 
   #userInputs {
@@ -145,15 +145,11 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="container">
-  <h1>Make them all the same color in as few moves as possible</h1>
-  <p>
-    You can use the arrow keys or WASD to navigate the grid.
-    <br />
-    Pressing enter, space or the fill button will fill all cells that are the same color as the current cell with the
-    new color selected in the dropdown
-    <br />
-    Cheat will let you click to teleport without counting it as a move
-  </p>
+  <h1>Controls:</h1>
+  <br />
+  <p>Use the arrow keys or WASD to navigate the grid</p>
+  <p>Press enter, space or the fill button to fill all cells that match the color of your location</p>
+  <p>Cheat will let you click to teleport without counting it as a move</p>
 
   {#if !completed}
     <div id="userInputs">
@@ -164,13 +160,13 @@
         {/each}
       </select>
 
-      <button type="submit" class="btn btn-primary" on:click={handleSubmit}>Fill</button>
+      <button type="submit" class="button is-primary" on:click={handleSubmit}>Fill</button>
       <span>Fills: {fillCount}</span>
       <span>Moves: {moveCount}</span>
       <span>Location: ({row}, {column})</span>
       <span>Time: {seconds} seconds</span>
 
-      <input bind:value={teleportEnabled} type="checkbox" />
+      <input bind:value={teleportEnabled} type="checkbox" class="checkbox" />
       <label for="cheatToggle">Cheat</label>
     </div>
   {:else}

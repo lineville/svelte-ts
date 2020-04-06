@@ -7,9 +7,9 @@
   import CongratsBanner from './CongratsBanner.svelte'
 
   // Props
-  export let height = 0
-  export let width = 0
-  export let numColors = 0
+  export let height = 15
+  export let width = 15
+  export let numColors = 6
 
   // State
   let row: number
@@ -143,7 +143,7 @@
   {#if !completed}
     <div id="userInputs">
 
-      <button type="submit" class="btn btn-primary" on:click={handleSubmit}>Chomp</button>
+      <button type="submit" class="button is-primary" on:click={handleSubmit}>Chomp</button>
       <span>Chomps: {chomps}</span>
       <span>Moves: {moveCount}</span>
       <span>Location: ({row}, {column})</span>
