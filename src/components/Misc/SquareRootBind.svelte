@@ -1,6 +1,7 @@
 <script lang="ts">
   let inputValue = 4
-  $: outputValue = Math.sqrt(inputValue).toFixed(2)
+  let outputValue: number = 2
+  $: outputValue = Math.sqrt(inputValue)
 </script>
 
 <style>

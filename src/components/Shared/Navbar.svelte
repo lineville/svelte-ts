@@ -52,8 +52,8 @@
         </div>
       </div>
 
-      <!-- Maybe add in Gizmos after polished up a bit -->
-      <!-- <div class="navbar-item has-dropdown is-hoverable">
+      <!-- Maybe add in Gizmos after polished up a bit  -->
+      <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">⚙️ Gizmos</a>
 
         <div class="navbar-dropdown">
@@ -65,7 +65,7 @@
           <hr class="navbar-divider" />
           <a class="navbar-item" href="/speedtyper" rel="noopener">💻 Speed Typer</a>
         </div>
-      </div> -->
+      </div>
 
       <a class="navbar-item" href="https://medium.com/@lineville" target="_blank" rel="noopener">
         <span class="icon is-medium">

@@ -29,13 +29,13 @@
 
   <label for="newPrice">Price</label>
   <input name="newPrice" type="number" bind:value={newPrice} />
-  <button class="uk-button uk-button-secondary" on:click={() => addPrice()}>Add to Stock Prices</button>
+  <button class="button is-info" on:click={() => addPrice()}>Add to Stock Prices</button>
 
   <br />
   <br />
   <br />
 
-  <label for="availableBuys"># of Trades</label>
+  <label for="availableBuys">Trades</label>
   <input name="availableBuys" type="number" bind:value={availableBuys} />
-  <button class="btn btn-primary" on:click={() => setProfit(prices, availableBuys)}>Max Profit: {profit}</button>
+  <button class="button is-primary" on:click={() => setProfit(prices, availableBuys)}>Max Profit: {profit}</button>
 </div>
