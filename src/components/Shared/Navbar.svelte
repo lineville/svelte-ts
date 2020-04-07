@@ -48,19 +48,19 @@
         <div class="navbar-dropdown">
           <a class="navbar-item" href="/colorfill" rel="noopener">🌈 Color Fill</a>
           <a class="navbar-item" href="/candychomper" rel="noopener">🍬 Candy Chomper</a>
+          <a class="navbar-item" href="/profitcalculator" rel="noopener">📉 Profit Calculator</a>
         </div>
       </div>
 
-      <div class="navbar-item has-dropdown is-hoverable">
+      <!-- <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">⚙️ Gizmos</a>
 
         <div class="navbar-dropdown">
           <a class="navbar-item" href="/counter" rel="noopener">➕ Counter</a>
           <a class="navbar-item" href="/squarerootbind" rel="noopener">🟧 Square Root</a>
-          <a class="navbar-item" href="/profitcalculator" rel="noopener">📉 Profit Calculator</a>
           <a class="navbar-item" href="/speedtyper" rel="noopener">💻 Speed Typer</a>
         </div>
-      </div>
+      </div> -->
 
       <a class="navbar-item" href="https://medium.com/@lineville" target="_blank" rel="noopener">
         <span class="icon is-medium">
