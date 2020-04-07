@@ -1,17 +1,17 @@
 <script lang="ts">
-  import maxProfit from '../utils/ProfitOptimizer';
-  export let prices: Array<number> = [];
-  export let newPrice: number = 0;
-  export let availableBuys: number = 3;
+  import maxProfit from '../../utils/ProfitOptimizer'
+  export let prices: Array<number> = []
+  export let newPrice: number = 0
+  export let availableBuys: number = 3
 
-  export let profit: number = 0;
+  export let profit: number = 0
 
   function setProfit(prices: Array<number>, availableBuys: number) {
-    profit = maxProfit(prices, availableBuys);
+    profit = maxProfit(prices, availableBuys)
   }
 
   function addPrice() {
-    prices = [...prices, newPrice];
+    prices = [...prices, newPrice]
   }
 </script>
 

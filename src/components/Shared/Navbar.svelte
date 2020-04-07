@@ -1,6 +1,6 @@
 <script lang="ts">
   const links = ['Stats', 'Timeline']
-  const emojis = ['🌐', '🗠']
+  const emojis = ['🌐', '📊']
   let mobileView = false
 </script>
 
@@ -39,8 +39,11 @@
         <a class="navbar-item" href="/{link}" rel="noopener">{emojis[idx]} {link}</a>
       {/each}
 
+    </div>
+
+    <div class="navbar-end">
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link" href="/">🕹️ Time Killers</a>
+        <a class="navbar-link" href="/">🕹️ Time Wasters</a>
 
         <div class="navbar-dropdown">
           <a class="navbar-item" href="/colorfill" rel="noopener">🌈 Color Fill</a>
@@ -49,9 +52,20 @@
         </div>
       </div>
 
-    </div>
+      <!-- Maybe add in Gizmos after polished up a bit -->
+      <!-- <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link" href="/">⚙️ Gizmos</a>
 
-    <div class="navbar-end">
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/counter" rel="noopener">➕ Counter</a>
+          <hr class="navbar-divider" />
+          <a class="navbar-item" href="/squarerootbind" rel="noopener">🟧 Square Root</a>
+          <hr class="navbar-divider" />
+          <a class="navbar-item" href="/profitcalculator" rel="noopener">📉 Profit Calculator</a>
+          <hr class="navbar-divider" />
+          <a class="navbar-item" href="/speedtyper" rel="noopener">💻 Speed Typer</a>
+        </div>
+      </div> -->
 
       <a class="navbar-item" href="https://medium.com/@lineville" target="_blank" rel="noopener">
         <span class="icon is-medium">
