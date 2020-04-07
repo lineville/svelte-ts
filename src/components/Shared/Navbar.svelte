@@ -47,22 +47,17 @@
 
         <div class="navbar-dropdown">
           <a class="navbar-item" href="/colorfill" rel="noopener">🌈 Color Fill</a>
-          <hr class="navbar-divider" />
           <a class="navbar-item" href="/candychomper" rel="noopener">🍬 Candy Chomper</a>
         </div>
       </div>
 
-      <!-- Maybe add in Gizmos after polished up a bit  -->
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">⚙️ Gizmos</a>
 
         <div class="navbar-dropdown">
           <a class="navbar-item" href="/counter" rel="noopener">➕ Counter</a>
-          <hr class="navbar-divider" />
           <a class="navbar-item" href="/squarerootbind" rel="noopener">🟧 Square Root</a>
-          <hr class="navbar-divider" />
           <a class="navbar-item" href="/profitcalculator" rel="noopener">📉 Profit Calculator</a>
-          <hr class="navbar-divider" />
           <a class="navbar-item" href="/speedtyper" rel="noopener">💻 Speed Typer</a>
         </div>
       </div>
