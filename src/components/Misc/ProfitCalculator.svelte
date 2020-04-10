@@ -30,7 +30,7 @@
         labels: prices.map((p: number, i: number) => i),
         datasets: [
           {
-            label: 'Price',
+            label: 'Stock Price',
             data: prices,
             backgroundColor: 'rgb(0, 209, 178, 0.2)',
             borderColor: 'rgb(0, 209, 178, 1)',
@@ -54,6 +54,15 @@
 
   const clearPrices = (): void => {
     prices = [0]
+    setProfit(prices, availableBuys)
+    chart.destroy()
+    chart = generateChart()
+  }
+
+  // * Bug here somewhere
+  const handleChange = (e: any) => {
+    availableBuys = e.target.value
+    console.log(availableBuys)
     setProfit(prices, availableBuys)
     chart.destroy()
     chart = generateChart()
@@ -111,7 +120,12 @@
 
           <div class="field">
             <p class="control is-expanded has-icons-left">
-              <input class="input is-info" type="number" name="availableBuys" bind:value={availableBuys} />
+              <input
+                class="input is-info"
+                type="number"
+                name="availableBuys"
+                value={availableBuys}
+                on:change={handleChange} />
               <span class="icon is-small is-left">
                 <i class="fa fa-sync" />
               </span>
