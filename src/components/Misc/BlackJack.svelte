@@ -118,6 +118,8 @@
 
   let dealerCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
   let userCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
+  let userScore = 0
+  $: userScore = userCards.reduce((acc, value) => acc + value.value, 0)
   let canSplit = userCards[0].name === userCards[1].name
 </script>
 
@@ -153,7 +155,7 @@
     <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer} />
     <hr />
 
-    <h2 class="subtitle">Your Hand</h2>
+    <h2 class="subtitle">Your Hand : {userScore}</h2>
 
     <CardList cards={userCards.map(c => cardToImage(c))} />
 
@@ -164,7 +166,7 @@
       <div>
 
         <span class="control has-icons-left">
-          <input class="input is-info" type="number" id="bet" bind:value={bet} />
+          <input class="input is-info" type="number" id="bet" name="bet" bind:value={bet} />
 
           <span class="icon is-small is-left">
             <i class="fa fa-dollar-sign" />
