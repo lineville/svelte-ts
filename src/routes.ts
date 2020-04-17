@@ -7,6 +7,7 @@ import Counter from './components/Misc/Counter.svelte'
 import ProfitCalculator from './components/Misc/ProfitCalculator.svelte'
 import SpeedTyper from './components/Misc/SpeedTyper.svelte'
 import SquareRootBind from './components/Misc/SquareRootBind.svelte'
+import BlackJack from './components/Misc/BlackJack.svelte'
 
 const routes = [
   {
@@ -45,6 +46,10 @@ const routes = [
     name: '/squarerootbind',
     component: SquareRootBind,
   },
+  {
+    name: '/blackjack',
+    component: BlackJack,
+  }
 ]
 
 export { routes }

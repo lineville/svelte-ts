@@ -49,6 +49,7 @@
           <a class="navbar-item" href="/colorfill" rel="noopener">🌈 Color Fill</a>
           <a class="navbar-item" href="/candychomper" rel="noopener">🍬 Candy Chomper</a>
           <a class="navbar-item" href="/profitcalculator" rel="noopener">📉 Profit Calculator</a>
+          <a class="navbar-item" href="/blackjack" rel="noopener">🃏 BlackJack</a>
         </div>
       </div>
 
