@@ -1,7 +1,10 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
+
   import { fly } from 'svelte/transition'
   export let cards = []
   export let visible = true
+  const dispatch = createEventDispatcher()
 </script>
 
 <style>
@@ -11,20 +14,24 @@
   }
 </style>
 
-<ul>
-  {#each cards as card, idx}
-    <li key={idx} transition:fly={{ x: (idx === 0 ? -1 : 1) * 500, duration: 1000 }}>
-      <div class="card">
-        <div class="card-image">
-          <figure class="image is-96x96">
-            {#if visible}
-              <img src={`/images/${card}.jpg`} alt="playing card" />
-            {:else}
-              <img src="/images/Gray_back.jpg" alt="playing card" />
-            {/if}
-          </figure>
-        </div>
+<!-- <ul> -->
+{#each cards as card, idx (card + idx)}
+  <li
+    key={card + idx}
+    in:fly={{ x: (idx === 0 ? -1 : 1) * 2000, duration: 500, delay: 100 }}
+    out:fly={{ x: -2000, duration: 800 }}
+    on:outroend={() => dispatch('gone', { card: card })}>
+    <div class="card">
+      <div class="card-image">
+        <figure class="image is-96x96">
+          {#if visible || idx === 0}
+            <img src={`/images/${card}.jpg`} alt="playing card" />
+          {:else}
+            <img src="/images/Gray_back.jpg" alt="playing card" />
+          {/if}
+        </figure>
       </div>
-    </li>
-  {/each}
-</ul>
+    </div>
+  </li>
+{/each}
+<!-- </ul> -->

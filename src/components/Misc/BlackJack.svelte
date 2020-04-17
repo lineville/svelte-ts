@@ -2,7 +2,7 @@
   // * Idea Build an AI mode that gives tips about actions to take based on strategy Grampa used when he played
 
   // * Stay on a lot of 13-16s follow basic strategy except for some splits and edge cases
-  import { fly, fade } from 'svelte/transition'
+  import { fly, slide } from 'svelte/transition'
   import CardList from './CardList.svelte'
 
   type Suite = '❤️' | '♦' | '♣️' | '♠️'
@@ -18,7 +18,14 @@
 
   // ------ Click Handlers ----------
   const hit = () => {
-    userCards = [...userCards, deck.pop() || blankCard]
+    const newCard = deck[0]
+    deck = deck.slice(1)
+    userCards = [...userCards, newCard]
+    userScore = userCards.reduce((acc, value) => acc + value.value, 0)
+    // Check for bust
+    if (isBusted()) {
+      lockedIn = true
+    }
   }
 
   const handlePeek = () => {
@@ -33,55 +40,87 @@
     handCompleted = false
     lockedIn = false
     canSplit = false
-    deck = shuffle(newDeck())
-    dealerCards = [deck.pop() || blankCard, deck.pop() || blankCard]
-    userCards = [deck.pop() || blankCard, deck.pop() || blankCard]
+    userCards = [deck[0], deck[2]]
+    dealerCards = [deck[1], deck[3]]
+    deck = deck.slice(4)
+    if (deck.length < 15) {
+      deck = shuffle(newDeck())
+    }
+  }
+
+  const splitHand = () => {
+    leftHand = [userCards[0]]
+    rightHand = [userCards[1]]
+    // userCards = []
+    split = true
+  }
+
+  const giveHint = () => {}
+
+  const hit1 = () => {
+    const newCard = deck[0]
+    deck = deck.slice(1)
+    leftHand = [...leftHand, newCard]
+  }
+
+  const hit2 = () => {
+    const newCard = deck[0]
+    deck = deck.slice(1)
+    rightHand = [...rightHand, newCard]
+  }
+
+  const doubleDown = () => {
+    bet *= 2
+    hit()
+    stay()
   }
 
   // ------- Utils ------------
   const newDeck = (): Array<Card> => {
-    let newDeck = []
+    let result = new Array<Card>()
 
     // Populate deck
-    for (let i = 2; i <= 14; i++) {
-      newDeck.push(indexToCard(i))
-    }
+    suites.forEach(suite => {
+      for (let i = 2; i <= 14; i++) {
+        result.push(indexToCard(i, suite))
+      }
+    })
 
-    return newDeck
+    return result
   }
 
   const shuffle = (deck: Array<Card>): Array<Card> => {
     return deck.sort(() => Math.random() - 0.5)
   }
 
-  const indexToCard = (idx: number): Card => {
+  const indexToCard = (idx: number, suite: Suite): Card => {
     switch (idx) {
       case 2:
-        return { name: 'Two', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Two', value: idx, optionalValue: null, suite: suite }
       case 3:
-        return { name: 'Three', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Three', value: idx, optionalValue: null, suite: suite }
       case 4:
-        return { name: 'Four', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Four', value: idx, optionalValue: null, suite: suite }
       case 5:
-        return { name: 'Five', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Five', value: idx, optionalValue: null, suite: suite }
       case 6:
-        return { name: 'Six', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Six', value: idx, optionalValue: null, suite: suite }
       case 7:
-        return { name: 'Seven', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Seven', value: idx, optionalValue: null, suite: suite }
       case 8:
-        return { name: 'Eight', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Eight', value: idx, optionalValue: null, suite: suite }
       case 9:
-        return { name: 'Nine', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Nine', value: idx, optionalValue: null, suite: suite }
       case 10:
-        return { name: 'Ten', value: idx, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Ten', value: idx, optionalValue: null, suite: suite }
       case 11:
-        return { name: 'Jack', value: 10, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Jack', value: 10, optionalValue: null, suite: suite }
       case 12:
-        return { name: 'Queen', value: 10, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'Queen', value: 10, optionalValue: null, suite: suite }
       case 13:
-        return { name: 'King', value: 10, optionalValue: null, suite: suites[idx % suites.length] }
+        return { name: 'King', value: 10, optionalValue: null, suite: suite }
       case 14:
-        return { name: 'Ace', value: 11, optionalValue: 1, suite: suites[idx % suites.length] }
+        return { name: 'Ace', value: 11, optionalValue: 1, suite: suite }
       default:
         throw new Error('Bad card value')
     }
@@ -108,26 +147,37 @@
     }
   }
 
+  const isBusted = (): boolean => {
+    // * TODO handle aces
+    return userScore > 21
+  }
   // ----------- State -----------
   let balance = 100
   let bet = 10
   let peekDealer = false
   let handCompleted = false
   let lockedIn = false
+  let split = false
+  let canSplit = false
   let deck = shuffle(newDeck())
-
+  let userScore: number
+  let dealerScore: number
   let dealerCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
   let userCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
-  let userScore = 0
-  let dealerScore = 0
   $: userScore = userCards.reduce((acc, value) => acc + value.value, 0)
   $: dealerScore = dealerCards.reduce((acc, value) => acc + value.value, 0)
-  let canSplit = userCards[0].name === userCards[1].name
+  $: canSplit = userCards[0].name === userCards[1].name
+  let leftHand: Array<Card> = []
+  let rightHand: Array<Card> = []
 </script>
 
 <style>
   button {
     margin: 5px 5px 5px 5px;
+  }
+
+  li {
+    margin-left: 15px;
   }
 
   :disabled {
@@ -143,25 +193,53 @@
     margin-top: 5px;
   }
 
+  #upNext {
+    margin-top: 80px;
+  }
+
+  #hint {
+    margin-left: 60px;
+  }
+
   .fa-dollar-sign {
     margin-bottom: 20px;
+  }
+
+  #controlBar {
+    margin-left: 50px;
   }
 </style>
 
 <div class="columns is-mobile is-centered">
-  <div class="column is-three-quarters">
+  <div class="column is-11">
 
     <h1 class="title">BlackJack</h1>
     <h2 class="subtitle">{peekDealer ? `Dealer's Hand : ${dealerScore}` : `Dealer's Hand`}</h2>
 
-    <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer} />
+    <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer || lockedIn} />
     <hr />
 
-    <h2 class="subtitle">Your Hand : {userScore}</h2>
+    <h2 class="subtitle">Your Hand : {userScore > 0 ? userScore : ''}</h2>
 
-    <CardList cards={userCards.map(c => cardToImage(c))} />
+    {#if split}
+      <ul>
+        <CardList cards={leftHand.map(c => cardToImage(c))} />
+        <span style="display:inline-block; width: 200px;" />
+        <CardList cards={rightHand.map(c => cardToImage(c))} />
+      </ul>
+    {:else}
+      <CardList cards={userCards.map(c => cardToImage(c))} />
+    {/if}
 
     <hr />
+
+    {#if lockedIn}
+      <div
+        class={`notification is-light is-narrow ${isBusted() ? 'is-danger' : 'is-success'}`}
+        transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
+        <strong>{isBusted() ? 'You Busted!' : 'You Won!'}</strong>
+      </div>
+    {/if}
 
     <!-- Control Bar -->
     <div class="field is-horizontal" id="controlBar">
@@ -175,28 +253,58 @@
           </span>
         </span>
 
-        <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
-          <span>Hit</span>
-          <span class="icon is-small">
-            <i class="fas fa-hand-holding-medical" />
-          </span>
-        </button>
+        {#if split}
+          <button class="button is-primary is-outlined" on:click={hit1} disabled={lockedIn}>
+            <span>Hit 1</span>
+            <span class="icon is-small">
+              <i class="fas fa-hand-holding-medical" />
+            </span>
+          </button>
+          <button class="button is-primary is-outlined" on:click={hit2} disabled={lockedIn}>
+            <span>Hit 2</span>
+            <span class="icon is-small">
+              <i class="fas fa-hand-holding-medical" />
+            </span>
+          </button>
+        {:else}
+          <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
+            <span>Hit</span>
+            <span class="icon is-small">
+              <i class="fas fa-hand-holding-medical" />
+            </span>
+          </button>
+        {/if}
 
-        <button class="button is-danger is-outlined" on:click={stay}>
-          <span>Stay</span>
-          <span class="icon is-small">
-            <i class="fas fa-hand-paper" />
-          </span>
-        </button>
+        {#if split}
+          <button class="button is-danger is-outlined" on:click={stay}>
+            <span>Stay 1</span>
+            <span class="icon is-small">
+              <i class="fas fa-hand-paper" />
+            </span>
+          </button>
+          <button class="button is-danger is-outlined" on:click={stay}>
+            <span>Stay 2</span>
+            <span class="icon is-small">
+              <i class="fas fa-hand-paper" />
+            </span>
+          </button>
+        {:else}
+          <button class="button is-danger is-outlined" on:click={stay}>
+            <span>Stay</span>
+            <span class="icon is-small">
+              <i class="fas fa-hand-paper" />
+            </span>
+          </button>
+        {/if}
 
-        <button class="button is-success is-outlined" disabled={lockedIn}>
+        <button class="button is-success is-outlined" on:click={doubleDown} disabled={lockedIn}>
           <span>Double Down</span>
           <span class="icon is-small">
             <i class="fas fa-coins" />
           </span>
         </button>
 
-        <button class="button is-warning is-outlined" disabled={!canSplit}>
+        <button class="button is-warning is-outlined" on:click={splitHand} disabled={!canSplit || split}>
           <span>Split</span>
           <span class="icon is-small">
             <i class="fas fa-expand-alt" />
@@ -219,16 +327,49 @@
         </button>
 
         <span class={`tag is-large ${balance >= 0 ? 'is-success' : 'is-danger'}`}>Balance: $ {balance}</span>
+
         {#if lockedIn}
-          <span
-            class="icon is-small"
-            in:fly={{ x: 200, y: -200, duration: 1000 }}
-            out:fly={{ x: 200, y: -200, duration: 1000 }}>
+          <span class="icon is-small" in:fly={{ y: -500, duration: 500 }} out:fly={{ x: 500, duration: 500 }}>
             <i class="fas fa-coins" />
           </span>
         {/if}
 
+        <button
+          class="button is-primary is-light has-tooltip-multiline"
+          id="hint"
+          on:click={giveHint}
+          data-tooltip="Helpful hint">
+          <span>Ask Don</span>
+          <span class="icon is-small">
+            <i class="fas fa-question" />
+          </span>
+          <span class="icon is-small">
+            <i class="fas fa-hands-helping" />
+          </span>
+        </button>
+
       </div>
     </div>
   </div>
+
+  <!-- Deck to Peek from -->
+  {#if peekDealer}
+    <div class="column is-1">
+      <ul>
+        {#each deck.slice(0, 5).reverse() as card, idx (card)}
+          <li key={card} transition:slide>
+            <figure class="image is-64x64">
+              <img src={`/images/${cardToImage(card)}.jpg`} alt="playing card" />
+            </figure>
+          </li>
+        {/each}
+      </ul>
+      <span class="tag is-primary is-light is-medium" id="upNext">
+        <span class="icon">
+          <i class="fas fa-arrow-up" />
+        </span>
+        <p class="subtitle">Up Next</p>
+      </span>
+    </div>
+  {/if}
 </div>
