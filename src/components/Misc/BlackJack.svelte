@@ -119,7 +119,9 @@
   let dealerCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
   let userCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
   let userScore = 0
+  let dealerScore = 0
   $: userScore = userCards.reduce((acc, value) => acc + value.value, 0)
+  $: dealerScore = dealerCards.reduce((acc, value) => acc + value.value, 0)
   let canSplit = userCards[0].name === userCards[1].name
 </script>
 
@@ -150,7 +152,7 @@
   <div class="column is-three-quarters">
 
     <h1 class="title">BlackJack</h1>
-    <h2 class="subtitle">Dealer's Hand</h2>
+    <h2 class="subtitle">{peekDealer ? `Dealer's Hand : ${dealerScore}` : `Dealer's Hand`}</h2>
 
     <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer} />
     <hr />
@@ -176,7 +178,7 @@
         <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
           <span>Hit</span>
           <span class="icon is-small">
-            <i class="fas fa-check" />
+            <i class="fas fa-hand-holding-medical" />
           </span>
         </button>
 
@@ -187,16 +189,6 @@
           </span>
         </button>
 
-        <button class="button is-warning is-outlined" disabled={!canSplit}>
-          <span class="icon is-small">
-            <i class="fas fa-arrow-left" />
-          </span>
-          <span>Split</span>
-          <span class="icon is-small">
-            <i class="fas fa-arrow-right" />
-          </span>
-        </button>
-
         <button class="button is-success is-outlined" disabled={lockedIn}>
           <span>Double Down</span>
           <span class="icon is-small">
@@ -204,11 +196,18 @@
           </span>
         </button>
 
+        <button class="button is-warning is-outlined" disabled={!canSplit}>
+          <span>Split</span>
+          <span class="icon is-small">
+            <i class="fas fa-expand-alt" />
+          </span>
+        </button>
+
         <button class="button is-dark is-outlined" on:click={handlePeek}>
 
           <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>
           <span class="icon is-small">
-            <i class="fas fa-eye" />
+            <i class={`fas fa-eye${peekDealer ? '-slash' : ''}`} />
           </span>
         </button>
 
