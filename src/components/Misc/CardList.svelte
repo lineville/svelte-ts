@@ -7,26 +7,23 @@
 <style>
   li {
     display: inline-block;
-    margin: 5px 5px 5px 5px;
+    margin: 5px 5px 30px 5px;
   }
 </style>
 
 <ul>
   {#each cards as card, idx}
-    <li key={idx} transition:fly={{ x: (idx === 0 ? -1 : 1) * 500, duration: 500 }}>
+    <li key={idx} transition:fly={{ x: (idx === 0 ? -1 : 1) * 500, duration: 1000 }}>
       <div class="card">
-        <div class="card-content">
-          <p class="title">{visible ? `${card.suite} ${card.name} ${card.suite}` : '?????'}</p>
-        </div>
-        <footer class="card-footer">
-          <p class="card-footer-item">
+        <div class="card-image">
+          <figure class="image is-96x96">
             {#if visible}
-              <span>{card.value} {card.optionalValue ? 'or ' + card.optionalValue : ''}</span>
+              <img src={`/images/${card}.jpg`} alt="playing card" />
             {:else}
-              <span>❤️ ♦️ ♣️ ♠️</span>
+              <img src="/images/Gray_back.jpg" alt="playing card" />
             {/if}
-          </p>
-        </footer>
+          </figure>
+        </div>
       </div>
     </li>
   {/each}
