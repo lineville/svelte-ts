@@ -223,12 +223,8 @@
     margin-top: 80px;
   }
 
-  #hint {
-    margin-left: 60px;
-  }
-
   #controlBar {
-    margin-left: 25vw;
+    margin-left: 20vw;
   }
 </style>
 
