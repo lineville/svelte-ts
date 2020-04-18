@@ -42,6 +42,7 @@
     </div>
 
     <div class="navbar-end">
+
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">🕹️ Time Wasters</a>
 
@@ -79,6 +80,10 @@
 
       <a class="navbar-item" href="https://lineville.github.io/portfolio/" target="_blank" rel="noopener">👋 Me</a>
 
+      <div class="navbar-item tags has-addons">
+        <span class="tag">v 0.0.1</span>
+        <span class="tag is-primary">Beta</span>
+      </div>
     </div>
   </div>
 </nav>

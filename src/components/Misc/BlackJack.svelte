@@ -34,9 +34,13 @@
 
   const stay = () => {
     lockedIn = true
+
+    // * TODO Check who actually won (dealer needs to play out hand based on simple rules)
+    balance += bet * 2
   }
 
   const nextHand = () => {
+    balance -= bet
     handCompleted = false
     lockedIn = false
     canSplit = false
@@ -49,13 +53,16 @@
   }
 
   const splitHand = () => {
+    // TODO need to hanlde hitting / staying per hand and math this is more involved
     leftHand = [userCards[0]]
     rightHand = [userCards[1]]
     // userCards = []
     split = true
   }
 
-  const giveHint = () => {}
+  const toggleHint = () => {
+    hintEnabled = !hintEnabled
+  }
 
   const hit1 = () => {
     const newCard = deck[0]
@@ -159,6 +166,8 @@
   let lockedIn = false
   let split = false
   let canSplit = false
+  let hintEnabled = false
+
   let deck = shuffle(newDeck())
   let userScore: number
   let dealerScore: number
@@ -213,7 +222,8 @@
 <div class="columns is-mobile is-centered">
   <div class="column is-11">
 
-    <h1 class="title">BlackJack</h1>
+    <h1 class="title is-centered">BlackJack</h1>
+
     <h2 class="subtitle">{peekDealer ? `Dealer's Hand : ${dealerScore}` : `Dealer's Hand`}</h2>
 
     <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer || lockedIn} />
@@ -232,14 +242,6 @@
     {/if}
 
     <hr />
-
-    {#if lockedIn}
-      <div
-        class={`notification is-light is-narrow ${isBusted() ? 'is-danger' : 'is-success'}`}
-        transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
-        <strong>{isBusted() ? 'You Busted!' : 'You Won!'}</strong>
-      </div>
-    {/if}
 
     <!-- Control Bar -->
     <div class="field is-horizontal" id="controlBar">
@@ -328,28 +330,39 @@
 
         <span class={`tag is-large ${balance >= 0 ? 'is-success' : 'is-danger'}`}>Balance: $ {balance}</span>
 
-        {#if lockedIn}
+        {#if lockedIn && !isBusted()}
           <span class="icon is-small" in:fly={{ y: -500, duration: 500 }} out:fly={{ x: 500, duration: 500 }}>
             <i class="fas fa-coins" />
           </span>
         {/if}
 
         <button
-          class="button is-primary is-light has-tooltip-multiline"
+          class="button is-primary has-tooltip-multiline"
           id="hint"
-          on:click={giveHint}
+          on:click={toggleHint}
           data-tooltip="Helpful hint">
-          <span>Ask Don</span>
-          <span class="icon is-small">
-            <i class="fas fa-question" />
-          </span>
-          <span class="icon is-small">
-            <i class="fas fa-hands-helping" />
-          </span>
+          <span>{hintEnabled ? 'Fly Solo' : 'Ask Don'}</span>
+            <span class="icon is-small">
+              <i class={`fas fa-${hintEnabled ? 'plane' : 'hands-helping'}`} />
+            </span>
         </button>
+
+        {#if hintEnabled}
+          <span class="tag is-info is-light is-medium subtitle" transition:fly={{ y: 1000, duration: 500 }}>
+            Don't hit everything okay now! Anything 12 and above is dangerous territory.
+          </span>
+        {/if}
 
       </div>
     </div>
+
+    {#if lockedIn}
+      <div
+        class={`notification is-light is-narrow ${isBusted() ? 'is-danger' : 'is-success'}`}
+        transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
+        <strong>{isBusted() ? 'You Busted!' : 'You Won!'}</strong>
+      </div>
+    {/if}
   </div>
 
   <!-- Deck to Peek from -->
