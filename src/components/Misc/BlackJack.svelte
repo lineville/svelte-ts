@@ -21,7 +21,6 @@
     const newCard = deck[0]
     deck = deck.slice(1)
     userCards = [...userCards, newCard]
-    userScore = userCards.reduce((acc, value) => acc + value.value, 0)
     // Check for bust
     if (isBusted()) {
       lockedIn = true
@@ -37,22 +36,32 @@
     dealerTurn = true
 
     // * TODO Check who actually won (dealer needs to play out hand based on simple rules)
-    // dealerCards = playOutDealerHand(dealerCards)
+    dealerCards = playOutDealerHand()
 
-    if (isDealerBusted()) {
+    if (isDealerBusted() || computeScore(userCards) > computeScore(dealerCards) || computeScore(userCards) === 21) {
+      userWon = true
+      push = false
       balance += bet * 2
     }
 
-    balance += bet * 2
+    if (computeScore(userCards) === computeScore(dealerCards)) {
+      userWon = false
+      push = true
+      balance += bet
+    }
   }
 
   const nextHand = () => {
     balance -= bet
     handCompleted = false
     lockedIn = false
-    canSplit = false
+    split = false
+    dealerTurn = false
+    userWon = false
+    push = false
     userCards = [deck[0], deck[2]]
     dealerCards = [deck[1], deck[3]]
+    canSplit = userCards[0].name === userCards[1].name
     deck = deck.slice(4)
     if (deck.length < 15) {
       deck = shuffle(newDeck())
@@ -164,12 +173,39 @@
 
   const isBusted = (): boolean => {
     // * TODO handle aces
-    return userScore > 21
+    return computeScore(userCards) > 21
   }
 
   const isDealerBusted = (): boolean => {
     // * TODO handle aces
-    return dealerScore > 21
+    return computeScore(dealerCards) > 21
+  }
+
+  const playOutDealerHand = (): Array<Card> => {
+    while (!isDealerBusted() && computeScore(dealerCards) < 17) {
+      const newCard = deck[0]
+      deck = deck.slice(1)
+      dealerCards = [...dealerCards, newCard]
+    }
+
+    return dealerCards
+  }
+
+  const computeScore = (cards: Array<Card>): number => {
+    let highestScore = cards.reduce((acc, value) => acc + value.value, 0)
+    if (highestScore <= 21) {
+      return highestScore
+    }
+
+    cards
+      .filter(card => card.optionalValue !== null)
+      .forEach(ace => {
+        highestScore -= 10
+        if (highestScore <= 21) {
+          return highestScore
+        }
+      })
+    return highestScore
   }
 
   // ----------- State -----------
@@ -180,19 +216,16 @@
   let handCompleted = false
   let lockedIn = false
   let split = false
-  let canSplit = false
   let hintEnabled = false
   let dealerTurn = false
+  let userWon = false
+  let push = false
   let hint = "Don't hit everything okay now! Anything 12 and above is dangerous territory."
 
   let deck = shuffle(newDeck())
-  let userScore: number
-  let dealerScore: number
-  let dealerCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
-  let userCards: Array<Card> = [deck.pop() || blankCard, deck.pop() || blankCard]
-  $: userScore = userCards.reduce((acc, value) => acc + value.value, 0)
-  $: dealerScore = dealerCards.reduce((acc, value) => acc + value.value, 0)
-  $: canSplit = userCards[0].name === userCards[1].name
+  let dealerCards: Array<Card> = [deck[0], deck[2]]
+  let userCards: Array<Card> = [deck[1], deck[3]]
+  let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
   let rightHand: Array<Card> = []
 </script>
@@ -214,8 +247,12 @@
     margin-top: 5px;
   }
 
+  .fa-dollar-sign {
+    margin-bottom: 20px;
+  }
+
   #bet {
-    width: 120px;
+    width: 100px;
     margin-top: 5px;
   }
 
@@ -224,21 +261,33 @@
   }
 
   #controlBar {
-    margin-left: 20vw;
+    margin-left: 15vw;
   }
 </style>
 
-<div class="columns is-mobile is-centered">
+<div class="columns is-mobile is-centered" id="blackJackContainer">
   <div class="column is-11">
 
     <h1 class="title is-centered">BlackJack</h1>
 
-    <h2 class="subtitle">{peekDealer ? `Dealer's Hand : ${dealerScore}` : `Dealer's Hand`}</h2>
+    <h2 class="subtitle">{peekDealer ? `Dealer's Hand : ${computeScore(dealerCards)}` : `Dealer's Hand`}</h2>
 
     <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer || lockedIn} />
     <hr />
 
-    <h2 class="subtitle">Your Hand : {userScore > 0 ? userScore : ''}</h2>
+    {#if split}
+      <ul>
+        <li>
+          <h2 class="subtitle">Hand 1 : {computeScore(leftHand)}</h2>
+        </li>
+        <span style="display:inline-block; width: 200px;" />
+        <li>
+          <h2 class="subtitle">Hand 2 : {computeScore(rightHand)}</h2>
+        </li>
+      </ul>
+    {:else}
+      <h2 class="subtitle">Your Hand : {computeScore(userCards)}</h2>
+    {/if}
 
     {#if split}
       <ul>
@@ -256,15 +305,6 @@
     <div class="is-centered" id="controlBar">
       <div class="field is-horizontal">
         <div>
-
-          <span class="control has-icons-left">
-            <input class="input is-info" type="number" id="bet" name="bet" bind:value={bet} disabled={!lockedIn} />
-
-            <span class="icon is-small is-left">
-              <i class="fa fa-dollar-sign" />
-            </span>
-          </span>
-
           {#if split}
             <button class="button is-primary is-outlined" on:click={hit1} disabled={lockedIn}>
               <span>Hit 1</span>
@@ -301,7 +341,7 @@
               </span>
             </button>
           {:else}
-            <button class="button is-danger is-outlined" on:click={stay}>
+            <button class="button is-danger is-outlined" on:click={stay} disabled={lockedIn}>
               <span>Stay</span>
               <span class="icon is-small">
                 <i class="fas fa-hand-paper" />
@@ -312,7 +352,7 @@
           <button
             class="button is-success is-outlined"
             on:click={doubleDown}
-            disabled={lockedIn || userCards.length !== 2}>
+            disabled={lockedIn || userCards.length !== 2 || split}>
             <span>Double Down</span>
             <span class="icon is-small">
               <i class="fas fa-coins" />
@@ -333,6 +373,14 @@
       <div class="field is-horizontal">
         <div>
 
+          <span class="control has-icons-left">
+            <input class="input is-info" type="number" id="bet" name="bet" bind:value={bet} disabled={!lockedIn} />
+
+            <span class="icon is-small is-left">
+              <i class="fa fa-dollar-sign" />
+            </span>
+          </span>
+
           <button class="button is-dark is-outlined" on:click={handlePeek}>
 
             <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>
@@ -343,8 +391,11 @@
 
           <span class={`tag is-large ${balance >= 0 ? 'is-success' : 'is-danger'}`}>Balance: $ {balance}</span>
 
-          {#if lockedIn && !isBusted()}
-            <span class="icon is-small" in:fly={{ y: -500, duration: 500 }} out:fly={{ x: 500, duration: 500 }}>
+          {#if lockedIn && userWon}
+            <span
+              class="icon is-small"
+              in:fly={{ y: -1000, duration: 500 }}
+              out:fly={{ y: -1000, duration: 500, delay: 800 }}>
               <i class="fas fa-coins" />
             </span>
           {/if}
@@ -374,10 +425,10 @@
     <!-- Message Fly-In -->
     {#if lockedIn}
       <div
-        class={`notification is-narrow ${isBusted() ? 'is-danger' : 'is-success'}`}
+        class={`notification is-narrow ${userWon ? 'is-success' : push ? 'is-info' : 'is-danger'}`}
         transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
-        <span id="wonOrLost">
-          <strong>{isBusted() ? 'You Busted!' : 'You Won!'}</strong>
+        <span class={`tag is-large ${userWon ? 'is-success' : push ? 'is-info' : 'is-danger'}`} id="wonOrLost">
+          <strong>{userWon ? 'You Won!' : push ? 'You Tied!' : 'You Lost!'}</strong>
         </span>
         <button class="button is-info is-outlined is-light" on:click={nextHand}>
           <span>Next Hand</span>
@@ -390,8 +441,8 @@
   </div>
 
   <!-- Deck to Peek from -->
-  {#if peekDealer}
-    <div class="column is-1">
+  <div class="column is-1">
+    {#if peekDealer}
       <ul>
         {#each deck.slice(0, 5).reverse() as card, idx (card)}
           <li key={card} transition:slide>
@@ -407,6 +458,6 @@
         </span>
         <p class="subtitle">Up Next</p>
       </span>
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>
