@@ -1,4 +1,6 @@
 <script>
+  import 'bulma/bulma.sass'
+
   import { onMount, onDestroy } from 'svelte'
   import { writable } from 'svelte/store'
   import { myStore } from './store'

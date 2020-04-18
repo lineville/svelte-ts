@@ -34,8 +34,15 @@
 
   const stay = () => {
     lockedIn = true
+    dealerTurn = true
 
     // * TODO Check who actually won (dealer needs to play out hand based on simple rules)
+    // dealerCards = playOutDealerHand(dealerCards)
+
+    if (isDealerBusted()) {
+      balance += bet * 2
+    }
+
     balance += bet * 2
   }
 
@@ -80,6 +87,7 @@
     bet *= 2
     hit()
     stay()
+    bet /= 2
   }
 
   // ------- Utils ------------
@@ -158,7 +166,14 @@
     // * TODO handle aces
     return userScore > 21
   }
+
+  const isDealerBusted = (): boolean => {
+    // * TODO handle aces
+    return dealerScore > 21
+  }
+
   // ----------- State -----------
+
   let balance = 100
   let bet = 10
   let peekDealer = false
@@ -167,6 +182,8 @@
   let split = false
   let canSplit = false
   let hintEnabled = false
+  let dealerTurn = false
+  let hint = "Don't hit everything okay now! Anything 12 and above is dangerous territory."
 
   let deck = shuffle(newDeck())
   let userScore: number
@@ -210,12 +227,8 @@
     margin-left: 60px;
   }
 
-  .fa-dollar-sign {
-    margin-bottom: 20px;
-  }
-
   #controlBar {
-    margin-left: 50px;
+    margin-left: 25vw;
   }
 </style>
 
@@ -244,123 +257,138 @@
     <hr />
 
     <!-- Control Bar -->
-    <div class="field is-horizontal" id="controlBar">
-      <div>
+    <div class="is-centered" id="controlBar">
+      <div class="field is-horizontal">
+        <div>
 
-        <span class="control has-icons-left">
-          <input class="input is-info" type="number" id="bet" name="bet" bind:value={bet} />
+          <span class="control has-icons-left">
+            <input class="input is-info" type="number" id="bet" name="bet" bind:value={bet} disabled={!lockedIn} />
 
-          <span class="icon is-small is-left">
-            <i class="fa fa-dollar-sign" />
+            <span class="icon is-small is-left">
+              <i class="fa fa-dollar-sign" />
+            </span>
           </span>
+
+          {#if split}
+            <button class="button is-primary is-outlined" on:click={hit1} disabled={lockedIn}>
+              <span>Hit 1</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+            </button>
+            <button class="button is-primary is-outlined" on:click={hit2} disabled={lockedIn}>
+              <span>Hit 2</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+            </button>
+          {:else}
+            <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
+              <span>Hit</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+            </button>
+          {/if}
+
+          {#if split}
+            <button class="button is-danger is-outlined" on:click={stay}>
+              <span>Stay 1</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-paper" />
+              </span>
+            </button>
+            <button class="button is-danger is-outlined" on:click={stay}>
+              <span>Stay 2</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-paper" />
+              </span>
+            </button>
+          {:else}
+            <button class="button is-danger is-outlined" on:click={stay}>
+              <span>Stay</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-paper" />
+              </span>
+            </button>
+          {/if}
+
+          <button
+            class="button is-success is-outlined"
+            on:click={doubleDown}
+            disabled={lockedIn || userCards.length !== 2}>
+            <span>Double Down</span>
+            <span class="icon is-small">
+              <i class="fas fa-coins" />
+            </span>
+          </button>
+
+          <button class="button is-warning is-outlined" on:click={splitHand} disabled={!canSplit || split}>
+            <span>Split</span>
+            <span class="icon is-small">
+              <i class="fas fa-expand-alt" />
+            </span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="field is-horizontal">
+        <div>
+
+          <button class="button is-dark is-outlined" on:click={handlePeek}>
+
+            <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>
+            <span class="icon is-small">
+              <i class={`fas fa-eye${peekDealer ? '-slash' : ''}`} />
+            </span>
+          </button>
+
+          <span class={`tag is-large ${balance >= 0 ? 'is-success' : 'is-danger'}`}>Balance: $ {balance}</span>
+
+          {#if lockedIn && !isBusted()}
+            <span class="icon is-small" in:fly={{ y: -500, duration: 500 }} out:fly={{ x: 500, duration: 500 }}>
+              <i class="fas fa-coins" />
+            </span>
+          {/if}
+
+          <button
+            class="button is-primary has-tooltip-multiline"
+            id="hint"
+            on:click={toggleHint}
+            data-tooltip="Helpful hint">
+            <span>{hintEnabled ? 'Fly Solo' : 'Ask Don'}</span>
+            <span class="icon is-small">
+              <i class={`fas fa-${hintEnabled ? 'plane' : 'question-circle'}`} />
+            </span>
+          </button>
+
+          {#if hintEnabled}
+            <span class="tag is-info is-light is-medium subtitle" transition:fly={{ y: 1000, duration: 500 }}>
+              {hint}
+            </span>
+          {/if}
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Message Fly-In -->
+    {#if lockedIn}
+      <div
+        class={`notification is-narrow ${isBusted() ? 'is-danger' : 'is-success'}`}
+        transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
+        <span id="wonOrLost">
+          <strong>{isBusted() ? 'You Busted!' : 'You Won!'}</strong>
         </span>
-
-        {#if split}
-          <button class="button is-primary is-outlined" on:click={hit1} disabled={lockedIn}>
-            <span>Hit 1</span>
-            <span class="icon is-small">
-              <i class="fas fa-hand-holding-medical" />
-            </span>
-          </button>
-          <button class="button is-primary is-outlined" on:click={hit2} disabled={lockedIn}>
-            <span>Hit 2</span>
-            <span class="icon is-small">
-              <i class="fas fa-hand-holding-medical" />
-            </span>
-          </button>
-        {:else}
-          <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
-            <span>Hit</span>
-            <span class="icon is-small">
-              <i class="fas fa-hand-holding-medical" />
-            </span>
-          </button>
-        {/if}
-
-        {#if split}
-          <button class="button is-danger is-outlined" on:click={stay}>
-            <span>Stay 1</span>
-            <span class="icon is-small">
-              <i class="fas fa-hand-paper" />
-            </span>
-          </button>
-          <button class="button is-danger is-outlined" on:click={stay}>
-            <span>Stay 2</span>
-            <span class="icon is-small">
-              <i class="fas fa-hand-paper" />
-            </span>
-          </button>
-        {:else}
-          <button class="button is-danger is-outlined" on:click={stay}>
-            <span>Stay</span>
-            <span class="icon is-small">
-              <i class="fas fa-hand-paper" />
-            </span>
-          </button>
-        {/if}
-
-        <button class="button is-success is-outlined" on:click={doubleDown} disabled={lockedIn}>
-          <span>Double Down</span>
-          <span class="icon is-small">
-            <i class="fas fa-coins" />
-          </span>
-        </button>
-
-        <button class="button is-warning is-outlined" on:click={splitHand} disabled={!canSplit || split}>
-          <span>Split</span>
-          <span class="icon is-small">
-            <i class="fas fa-expand-alt" />
-          </span>
-        </button>
-
-        <button class="button is-dark is-outlined" on:click={handlePeek}>
-
-          <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>
-          <span class="icon is-small">
-            <i class={`fas fa-eye${peekDealer ? '-slash' : ''}`} />
-          </span>
-        </button>
-
-        <button class="button is-info is-outlined" on:click={nextHand}>
+        <button class="button is-info is-outlined is-light" on:click={nextHand}>
           <span>Next Hand</span>
           <span class="icon is-small">
             <i class="fas fa-angle-double-right" />
           </span>
         </button>
-
-        <span class={`tag is-large ${balance >= 0 ? 'is-success' : 'is-danger'}`}>Balance: $ {balance}</span>
-
-        {#if lockedIn && !isBusted()}
-          <span class="icon is-small" in:fly={{ y: -500, duration: 500 }} out:fly={{ x: 500, duration: 500 }}>
-            <i class="fas fa-coins" />
-          </span>
-        {/if}
-
-        <button
-          class="button is-primary has-tooltip-multiline"
-          id="hint"
-          on:click={toggleHint}
-          data-tooltip="Helpful hint">
-          <span>{hintEnabled ? 'Fly Solo' : 'Ask Don'}</span>
-            <span class="icon is-small">
-              <i class={`fas fa-${hintEnabled ? 'plane' : 'hands-helping'}`} />
-            </span>
-        </button>
-
-        {#if hintEnabled}
-          <span class="tag is-info is-light is-medium subtitle" transition:fly={{ y: 1000, duration: 500 }}>
-            Don't hit everything okay now! Anything 12 and above is dangerous territory.
-          </span>
-        {/if}
-
-      </div>
-    </div>
-
-    {#if lockedIn}
-      <div
-        class={`notification is-light is-narrow ${isBusted() ? 'is-danger' : 'is-success'}`}
-        transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
-        <strong>{isBusted() ? 'You Busted!' : 'You Won!'}</strong>
       </div>
     {/if}
   </div>

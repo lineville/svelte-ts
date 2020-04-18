@@ -14,7 +14,6 @@
   }
 </style>
 
-<!-- <ul> -->
 {#each cards as card, idx (card + idx)}
   <li
     key={card + idx}
@@ -34,4 +33,3 @@
     </div>
   </li>
 {/each}
-<!-- </ul> -->

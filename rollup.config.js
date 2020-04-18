@@ -1,6 +1,7 @@
 import svelte from "rollup-plugin-svelte";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
+import postcss from "rollup-plugin-postcss";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import typescript from "@wessberg/rollup-plugin-ts";
@@ -42,6 +43,7 @@ export default {
     }),
     commonjs(),
     typescript(),
+    postcss(),
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
