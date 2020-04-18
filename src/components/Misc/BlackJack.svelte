@@ -24,6 +24,8 @@
     // Check for bust
     if (isBusted()) {
       lockedIn = true
+      userWon = false
+      push = false
     }
   }
 
@@ -34,8 +36,6 @@
   const stay = () => {
     lockedIn = true
     dealerTurn = true
-
-    // * TODO Check who actually won (dealer needs to play out hand based on simple rules)
     dealerCards = playOutDealerHand()
 
     if (isDealerBusted() || computeScore(userCards) > computeScore(dealerCards) || computeScore(userCards) === 21) {
@@ -43,8 +43,7 @@
       push = false
       balance += bet * 2
     }
-
-    if (computeScore(userCards) === computeScore(dealerCards)) {
+    else if (computeScore(userCards) === computeScore(dealerCards)) {
       userWon = false
       push = true
       balance += bet
@@ -72,7 +71,7 @@
     // TODO need to hanlde hitting / staying per hand and math this is more involved
     leftHand = [userCards[0]]
     rightHand = [userCards[1]]
-    // userCards = []
+    userCards = []
     split = true
   }
 
@@ -93,9 +92,12 @@
   }
 
   const doubleDown = () => {
+    balance -= bet
     bet *= 2
     hit()
-    stay()
+    if (!isBusted()) {
+      stay()
+    }
     bet /= 2
   }
 
@@ -172,12 +174,10 @@
   }
 
   const isBusted = (): boolean => {
-    // * TODO handle aces
     return computeScore(userCards) > 21
   }
 
   const isDealerBusted = (): boolean => {
-    // * TODO handle aces
     return computeScore(dealerCards) > 21
   }
 
@@ -207,6 +207,12 @@
       })
     return highestScore
   }
+
+  const handleKeydown = (event : any) => {
+    if (event.key === ' ') {
+      nextHand()
+    }
+	}
 
   // ----------- State -----------
 
@@ -265,26 +271,23 @@
   }
 </style>
 
+
+<svelte:window on:keydown={handleKeydown}/>
+
 <div class="columns is-mobile is-centered" id="blackJackContainer">
   <div class="column is-11">
 
     <h1 class="title is-centered">BlackJack</h1>
 
-    <h2 class="subtitle">{peekDealer ? `Dealer's Hand : ${computeScore(dealerCards)}` : `Dealer's Hand`}</h2>
+    <h2 class="subtitle">
+      {peekDealer || lockedIn ? `Dealer's Hand : ${computeScore(dealerCards)}` : `Dealer's Hand`}
+    </h2>
 
     <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer || lockedIn} />
     <hr />
 
     {#if split}
-      <ul>
-        <li>
-          <h2 class="subtitle">Hand 1 : {computeScore(leftHand)}</h2>
-        </li>
-        <span style="display:inline-block; width: 200px;" />
-        <li>
-          <h2 class="subtitle">Hand 2 : {computeScore(rightHand)}</h2>
-        </li>
-      </ul>
+          <h2 class="subtitle">Hand 1 : {computeScore(leftHand)} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                 Hand 2 : {computeScore(rightHand)}</h2>
     {:else}
       <h2 class="subtitle">Your Hand : {computeScore(userCards)}</h2>
     {/if}
@@ -436,6 +439,8 @@
             <i class="fas fa-angle-double-right" />
           </span>
         </button>
+
+        <span>(or press space)</span>
       </div>
     {/if}
   </div>
