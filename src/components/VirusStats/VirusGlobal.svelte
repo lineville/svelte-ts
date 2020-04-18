@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
   import StatsTableGlobal from './StatsTableGlobal.svelte'
 
-  const apiURL = 'https://corona.lmao.ninja/countries/'
+  const apiURL = 'https://corona.lmao.ninja/v2/countries/'
 
   let data = {}
   let countryOptions = []
