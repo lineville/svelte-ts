@@ -228,6 +228,14 @@
   let push = false
   let hint = "Don't hit everything okay now! Anything 12 and above is dangerous territory."
 
+// States for split hand
+  let canHitLeft = true
+  let canHitRight = false
+  let canStayLeft = false
+  let canStayRight = false
+  let leftHandDone = false
+  let rightHandDone = false
+
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
   let userCards: Array<Card> = [deck[1], deck[3]]
@@ -309,13 +317,13 @@
       <div class="field is-horizontal">
         <div>
           {#if split}
-            <button class="button is-primary is-outlined" on:click={hit1} disabled={lockedIn}>
+            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone}>
               <span>Hit 1</span>
               <span class="icon is-small">
                 <i class="fas fa-hand-holding-medical" />
               </span>
             </button>
-            <button class="button is-primary is-outlined" on:click={hit2} disabled={lockedIn}>
+            <button class="button is-primary is-outlined" on:click={hit2} disabled={rightHandDone}>
               <span>Hit 2</span>
               <span class="icon is-small">
                 <i class="fas fa-hand-holding-medical" />
