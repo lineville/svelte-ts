@@ -13,6 +13,7 @@
     suite: Suite
   }
 
+
   const suites: Array<Suite> = ['❤️', '♦', '♣️', '♠️']
   const blankCard: Card = { name: 'Blank', value: 20, optionalValue: 1, suite: '♠️' }
 
@@ -21,8 +22,7 @@
     const newCard = deck[0]
     deck = deck.slice(1)
     userCards = [...userCards, newCard]
-    // Check for bust
-    if (isBusted()) {
+    if (isBusted(userCards)) {
       lockedIn = true
       userWon = false
       push = false
@@ -38,7 +38,7 @@
     dealerTurn = true
     dealerCards = playOutDealerHand()
 
-    if (isDealerBusted() || computeScore(userCards) > computeScore(dealerCards) || computeScore(userCards) === 21) {
+    if (isBusted(dealerCards) || computeScore(userCards) > computeScore(dealerCards) || computeScore(userCards) === 21) {
       userWon = true
       push = false
       balance += bet * 2
@@ -48,6 +48,22 @@
       push = true
       balance += bet
     }
+  }
+
+  const stay1 = () => {
+    leftHandDone = true
+  }
+
+  const stay2 = () => {
+    rightHandDone = true
+    lockedIn = true
+    dealerTurn = true
+    dealerTurn = true
+    dealerCards = playOutDealerHand()
+    // TODO Handle stay logic with two hands check for different winning conditions
+
+    
+
   }
 
   const nextHand = () => {
@@ -68,9 +84,10 @@
   }
 
   const splitHand = () => {
-    // TODO need to hanlde hitting / staying per hand and math this is more involved
-    leftHand = [userCards[0]]
-    rightHand = [userCards[1]]
+    // TODO if splitting aces cannot hit after delt cards
+    leftHand = [userCards[0], deck[0]]
+    rightHand = [userCards[1], deck[1]]
+    deck = deck.slice(2)
     userCards = []
     split = true
   }
@@ -95,7 +112,7 @@
     balance -= bet
     bet *= 2
     hit()
-    if (!isBusted()) {
+    if (!isBusted(userCards)) {
       stay()
     }
     bet /= 2
@@ -173,16 +190,12 @@
     }
   }
 
-  const isBusted = (): boolean => {
-    return computeScore(userCards) > 21
-  }
-
-  const isDealerBusted = (): boolean => {
-    return computeScore(dealerCards) > 21
+  const isBusted = (cards: Array<Card>): boolean => {
+    return computeScore(cards) > 21
   }
 
   const playOutDealerHand = (): Array<Card> => {
-    while (!isDealerBusted() && computeScore(dealerCards) < 17) {
+    while (!isBusted(dealerCards) && computeScore(dealerCards) < 17) {
       const newCard = deck[0]
       deck = deck.slice(1)
       dealerCards = [...dealerCards, newCard]
@@ -212,7 +225,12 @@
     if (event.key === ' ') {
       nextHand()
     }
-	}
+  }
+  
+  const donsHint = (userCards : Array<Card>, dealerUpCard : Card) : string => {
+    // TODO : implement basic strategy
+    return "You should do this!"
+  }
 
   // ----------- State -----------
 
@@ -226,19 +244,13 @@
   let dealerTurn = false
   let userWon = false
   let push = false
-  let hint = "Don't hit everything okay now! Anything 12 and above is dangerous territory."
-
-// States for split hand
-  let canHitLeft = true
-  let canHitRight = false
-  let canStayLeft = false
-  let canStayRight = false
   let leftHandDone = false
   let rightHandDone = false
 
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
-  let userCards: Array<Card> = [deck[1], deck[3]]
+  let userCards: Array<Card> = [{ name: "Two", value: 2, optionalValue: null, suite: '❤️'}, { name: "Two", value: 2, optionalValue: null, suite: '♠️'}]
+  // let userCards: Array<Card> = [deck[1], deck[3]]
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
   let rightHand: Array<Card> = []
@@ -295,7 +307,7 @@
     <hr />
 
     {#if split}
-          <h2 class="subtitle">Hand 1 : {computeScore(leftHand)} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                 Hand 2 : {computeScore(rightHand)}</h2>
+          <h2 class="subtitle">Left Hand : {computeScore(leftHand)} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Right Hand : {computeScore(rightHand)}</h2>
     {:else}
       <h2 class="subtitle">Your Hand : {computeScore(userCards)}</h2>
     {/if}
@@ -317,16 +329,16 @@
       <div class="field is-horizontal">
         <div>
           {#if split}
-            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone}>
+            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone || isBusted(leftHand)}>
               <span>Hit 1</span>
               <span class="icon is-small">
                 <i class="fas fa-hand-holding-medical" />
               </span>
             </button>
-            <button class="button is-primary is-outlined" on:click={hit2} disabled={rightHandDone}>
-              <span>Hit 2</span>
+            <button class="button is-danger is-outlined" on:click={stay1} disabled={leftHandDone || isBusted(leftHand)}>
+              <span>Stay 1</span>
               <span class="icon is-small">
-                <i class="fas fa-hand-holding-medical" />
+                <i class="fas fa-hand-paper" />
               </span>
             </button>
           {:else}
@@ -339,13 +351,13 @@
           {/if}
 
           {#if split}
-            <button class="button is-danger is-outlined" on:click={stay}>
-              <span>Stay 1</span>
+            <button class="button is-primary is-outlined" on:click={hit2} disabled={!(leftHandDone || isBusted(leftHand)) || isBusted(rightHand)}>
+              <span>Hit 2</span>
               <span class="icon is-small">
-                <i class="fas fa-hand-paper" />
+                <i class="fas fa-hand-holding-medical" />
               </span>
             </button>
-            <button class="button is-danger is-outlined" on:click={stay}>
+            <button class="button is-danger is-outlined" on:click={stay2} disabled={!(leftHandDone || isBusted(leftHand)) || rightHandDone || isBusted(rightHand)}>
               <span>Stay 2</span>
               <span class="icon is-small">
                 <i class="fas fa-hand-paper" />
@@ -424,7 +436,7 @@
 
           {#if hintEnabled}
             <span class="tag is-info is-light is-medium subtitle" transition:fly={{ y: 1000, duration: 500 }}>
-              {hint}
+              {donsHint(userCards, dealerCards[0])}
             </span>
           {/if}
 
