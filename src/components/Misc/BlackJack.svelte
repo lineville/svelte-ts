@@ -4,6 +4,7 @@
   // * Stay on a lot of 13-16s follow basic strategy except for some splits and edge cases
   import { fly, slide } from 'svelte/transition'
   import CardList from './CardList.svelte'
+  import { decideMove, computeScore } from '../../utils/BasicStrategy'
 
   type Suite = '❤️' | '♦' | '♣️' | '♠️'
   type Card = {
@@ -203,23 +204,6 @@
     return dealerCards
   }
 
-  const computeScore = (cards: Array<Card>): number => {
-    let highestScore = cards.reduce((acc, value) => acc + value.value, 0)
-    if (highestScore <= 21) {
-      return highestScore
-    }
-
-    cards
-      .filter(card => card.optionalValue !== null)
-      .forEach(ace => {
-        highestScore -= 10
-        if (highestScore <= 21) {
-          return highestScore
-        }
-      })
-    return highestScore
-  }
-
   const handleKeydown = (event: any) => {
     if (event.key === ' ') {
       nextHand()
@@ -227,8 +211,23 @@
   }
 
   const donsHint = (userCards: Array<Card>, dealerUpCard: Card): string => {
-    // TODO : implement basic strategy
-    return 'You should do this!'
+    let decision = decideMove(userCards, dealerUpCard)
+    switch (decision) {
+      case 'Stay':
+        hintColor = 'is-danger'
+        break
+      case 'Hit':
+        hintColor = 'is-primary'
+        break
+      case 'DoubleDown':
+        hintColor = 'is-success'
+        break
+      case 'Split':
+        hintColor = 'is-warning'
+      default:
+        break
+    }
+    return 'You should probably ' + decision.toLowerCase()
   }
 
   // ----------- State -----------
@@ -245,17 +244,17 @@
   let push = false
   let leftHandDone = false
   let rightHandDone = false
+  let hintColor = 'is-info'
+  let hint = 'Default hint'
 
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
-  // let userCards: Array<Card> = [
-  //   { name: 'Two', value: 2, optionalValue: null, suite: '❤️' },
-  //   { name: 'Two', value: 2, optionalValue: null, suite: '♠️' },
-  // ]
   let userCards: Array<Card> = [deck[1], deck[3]]
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
   let rightHand: Array<Card> = []
+  // * Put me back when hint is working
+  // $: hint = donsHint(userCards, dealerCards[0])
 </script>
 
 <style>
@@ -453,8 +452,8 @@
           </button>
 
           {#if hintEnabled}
-            <span class="tag is-info is-light is-medium subtitle" transition:fly={{ y: 1000, duration: 500 }}>
-              {donsHint(userCards, dealerCards[0])}
+            <span class={`tag ${hintColor} is-light is-large subtitle`} transition:fly={{ y: 1000, duration: 500 }}>
+              {hint}
             </span>
           {/if}
 
