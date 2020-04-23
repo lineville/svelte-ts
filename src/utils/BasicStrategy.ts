@@ -132,10 +132,16 @@ const isHardHand = (hand: Array<Card>): boolean => {
 
 export const shouldHit = (userCards: Array<Card>, dealerUpCard: Card): boolean => {
   if (isHardHand(userCards)) {
-    return hardTable[computeScore(userCards) - 8][dealerUpCard.value - 2] === 'Hit'
+    return (
+      hardTable[computeScore(userCards) - 8][dealerUpCard.value - 2] === 'Hit' ||
+      hardTable[computeScore(userCards) - 8][dealerUpCard.value - 2] === 'DoubleDown'
+    )
   } else {
     const hardCards = userCards.filter((c) => c.name !== 'Ace')
-    return softTable[computeScore(hardCards) - 2][dealerUpCard.value - 2] === 'Hit'
+    return (
+      softTable[computeScore(hardCards) - 2][dealerUpCard.value - 2] === 'Hit' ||
+      softTable[computeScore(hardCards) - 2][dealerUpCard.value - 2] === 'DoubleDown'
+    )
   }
 }
 

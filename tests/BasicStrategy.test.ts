@@ -132,4 +132,16 @@ describe('Compute Score', () => {
     ])
     expect(result).to.be.equal(12)
   })
+
+  it('should hit', () => {
+    const result = decideMove(
+      [
+        { name: 'Five', value: 5, optionalValue: null, suite: '♠️' },
+        { name: 'Three', value: 3, optionalValue: null, suite: '♠️' },
+        { name: 'Three', value: 3, optionalValue: null, suite: '♠️' },
+      ],
+      { name: 'Four', value: 4, optionalValue: null, suite: '♠️' },
+    )
+    expect(result).to.be.equal('Hit')
+  })
 })
