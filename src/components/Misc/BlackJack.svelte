@@ -1,7 +1,4 @@
 <script lang="ts">
-  // * Idea Build an AI mode that gives tips about actions to take based on strategy Grampa used when he played
-
-  // * Stay on a lot of 13-16s follow basic strategy except for some splits and edge cases
   import { fly, slide } from 'svelte/transition'
   import CardList from './CardList.svelte'
   import { decideMove, computeScore } from '../../utils/BasicStrategy'
@@ -14,11 +11,8 @@
     suite: Suite
   }
 
-  const suites: Array<Suite> = ['❤️', '♦', '♣️', '♠️']
-  const blankCard: Card = { name: 'Blank', value: 20, optionalValue: 1, suite: '♠️' }
-
   // ------ Click Handlers ----------
-  const hit = () => {
+  const hit = (): void => {
     const newCard = deck[0]
     deck = deck.slice(1)
     userCards = [...userCards, newCard]
@@ -26,14 +20,16 @@
       lockedIn = true
       userWon = false
       push = false
+    } else {
+      hint = donsHint(userCards, dealerCards[0])
     }
   }
 
-  const handlePeek = () => {
+  const handlePeek = (): void => {
     peekDealer = !peekDealer
   }
 
-  const stay = () => {
+  const stay = (): void => {
     lockedIn = true
     dealerTurn = true
     dealerCards = playOutDealerHand()
@@ -53,11 +49,11 @@
     }
   }
 
-  const stay1 = () => {
+  const stay1 = (): void => {
     leftHandDone = true
   }
 
-  const stay2 = () => {
+  const stay2 = (): void => {
     rightHandDone = true
     lockedIn = true
     dealerTurn = true
@@ -66,7 +62,7 @@
     // TODO Handle stay logic with two hands check for different winning conditions
   }
 
-  const nextHand = () => {
+  const nextHand = (): void => {
     balance -= bet
     handCompleted = false
     lockedIn = false
@@ -77,38 +73,41 @@
     userCards = [deck[0], deck[2]]
     dealerCards = [deck[1], deck[3]]
     canSplit = userCards[0].name === userCards[1].name
+    hint = donsHint(userCards, dealerCards[0])
     deck = deck.slice(4)
     if (deck.length < 15) {
       deck = shuffle(newDeck())
     }
   }
 
-  const splitHand = () => {
-    // TODO if splitting aces cannot hit after delt cards
+  const splitHand = (): void => {
     leftHand = [userCards[0], deck[0]]
     rightHand = [userCards[1], deck[1]]
     deck = deck.slice(2)
     userCards = []
     split = true
+    // TODO if splitting aces cannot hit after delt cards
+    leftHandDone = true
+    rightHandDone = true
   }
 
-  const toggleHint = () => {
+  const toggleHint = (): void => {
     hintEnabled = !hintEnabled
   }
 
-  const hit1 = () => {
+  const hit1 = (): void => {
     const newCard = deck[0]
     deck = deck.slice(1)
     leftHand = [...leftHand, newCard]
   }
 
-  const hit2 = () => {
+  const hit2 = (): void => {
     const newCard = deck[0]
     deck = deck.slice(1)
     rightHand = [...rightHand, newCard]
   }
 
-  const doubleDown = () => {
+  const doubleDown = (): void => {
     balance -= bet
     bet *= 2
     hit()
@@ -121,8 +120,7 @@
   // ------- Utils ------------
   const newDeck = (): Array<Card> => {
     let result = new Array<Card>()
-
-    // Populate deck
+    const suites: Array<Suite> = ['❤️', '♦', '♣️', '♠️']
     suites.forEach(suite => {
       for (let i = 2; i <= 14; i++) {
         result.push(indexToCard(i, suite))
@@ -205,8 +203,24 @@
   }
 
   const handleKeydown = (event: any) => {
-    if (event.key === ' ') {
-      nextHand()
+    switch (event.key) {
+      case ' ':
+        nextHand()
+        break
+      case 'ArrowLeft':
+        stay()
+        break
+      case 'ArrowRight':
+        hit()
+        break
+      case 'ArrowUp':
+        splitHand()
+        break
+      case 'ArrowDown':
+        doubleDown()
+        break
+      default:
+        break
     }
   }
 
@@ -215,19 +229,17 @@
     switch (decision) {
       case 'Stay':
         hintColor = 'is-danger'
-        break
+        return 'Better to play it safe on this one and stay'
       case 'Hit':
         hintColor = 'is-primary'
-        break
+        return 'The smart thing to do here is to hit!'
       case 'DoubleDown':
         hintColor = 'is-success'
-        break
+        return "Things are looking good I'd double down on this one 💰!"
       case 'Split':
         hintColor = 'is-warning'
-      default:
-        break
+        return 'Splitting looks like your best option!'
     }
-    return 'You should probably ' + decision.toLowerCase()
   }
 
   // ----------- State -----------
@@ -245,7 +257,6 @@
   let leftHandDone = false
   let rightHandDone = false
   let hintColor = 'is-info'
-  let hint = 'Default hint'
 
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
@@ -253,8 +264,7 @@
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
   let rightHand: Array<Card> = []
-  // * Put me back when hint is working
-  // $: hint = donsHint(userCards, dealerCards[0])
+  let hint = donsHint(userCards, dealerCards[0])
 </script>
 
 <style>
@@ -268,6 +278,7 @@
 
   hr {
     margin-top: 15px;
+    width: 85%;
   }
 
   .subtitle {
@@ -339,27 +350,6 @@
     <div class="is-centered" id="controlBar">
       <div class="field is-horizontal">
         <div>
-          {#if split}
-            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone || isBusted(leftHand)}>
-              <span>Hit 1</span>
-              <span class="icon is-small">
-                <i class="fas fa-hand-holding-medical" />
-              </span>
-            </button>
-            <button class="button is-danger is-outlined" on:click={stay1} disabled={leftHandDone || isBusted(leftHand)}>
-              <span>Stay 1</span>
-              <span class="icon is-small">
-                <i class="fas fa-hand-paper" />
-              </span>
-            </button>
-          {:else}
-            <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
-              <span>Hit</span>
-              <span class="icon is-small">
-                <i class="fas fa-hand-holding-medical" />
-              </span>
-            </button>
-          {/if}
 
           {#if split}
             <button
@@ -382,29 +372,69 @@
             </button>
           {:else}
             <button class="button is-danger is-outlined" on:click={stay} disabled={lockedIn}>
+              <span class="icon is-small">
+                <i class="fas fa-hand-paper" />
+              </span>
               <span>Stay</span>
+              <span class="icon is-small">
+                <i class="fas fa-chevron-left" />
+              </span>
+            </button>
+          {/if}
+
+          {#if split}
+            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone || isBusted(leftHand)}>
+              <span>Hit 1</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+            </button>
+            <button class="button is-danger is-outlined" on:click={stay1} disabled={leftHandDone || isBusted(leftHand)}>
+              <span>Stay 1</span>
               <span class="icon is-small">
                 <i class="fas fa-hand-paper" />
               </span>
             </button>
+          {:else}
+            <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+              <span>Hit</span>
+              <span class="icon is-small">
+                <i class="fas fa-chevron-right" />
+              </span>
+            </button>
           {/if}
+
+          <button class="button is-warning is-outlined" on:click={splitHand} disabled={!canSplit || split}>
+            <span class="icon is-small">
+              <i class="fas fa-expand-alt" />
+            </span>
+            <span>Split</span>
+            <span class="icon is-small">
+              <i class="fas fa-chevron-up" />
+            </span>
+          </button>
 
           <button
             class="button is-success is-outlined"
             on:click={doubleDown}
             disabled={lockedIn || userCards.length !== 2 || split}>
-            <span>Double Down</span>
             <span class="icon is-small">
               <i class="fas fa-coins" />
             </span>
-          </button>
-
-          <button class="button is-warning is-outlined" on:click={splitHand} disabled={!canSplit || split}>
-            <span>Split</span>
+            <span>Double Down</span>
             <span class="icon is-small">
-              <i class="fas fa-expand-alt" />
+              <i class="fas fa-chevron-down" />
             </span>
           </button>
+
+          {#if hintEnabled}
+            <span class={`tag is-light is-medium`} transition:fly={{ x: 1000, duration: 500 }}>
+              Don's hints are purely based on basic strategy he can't see any of the cards in the deck!
+            </span>
+          {/if}
 
         </div>
 
@@ -420,14 +450,6 @@
               <i class="fa fa-dollar-sign" />
             </span>
           </span>
-
-          <button class="button is-dark is-outlined" on:click={handlePeek}>
-
-            <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>
-            <span class="icon is-small">
-              <i class={`fas fa-eye${peekDealer ? '-slash' : ''}`} />
-            </span>
-          </button>
 
           <span class={`tag is-large ${balance >= 0 ? 'is-success' : 'is-danger'}`}>Balance: $ {balance}</span>
 
@@ -501,5 +523,12 @@
         <p class="subtitle">Up Next</p>
       </span>
     {/if}
+    <button class="button is-dark is-small is-outlined" on:click={handlePeek}>
+
+      <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>
+      <span class="icon is-small">
+        <i class={`fas fa-eye${peekDealer ? '-slash' : ''}`} />
+      </span>
+    </button>
   </div>
 </div>

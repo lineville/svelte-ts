@@ -1,17 +1,10 @@
 <script>
   import 'bulma/bulma.sass'
-
-  import { onMount, onDestroy } from 'svelte'
   import { writable } from 'svelte/store'
   import { myStore } from './store'
-
-  import Navbar from './components/Shared/Navbar.svelte'
   import { Router } from 'svelte-router-spa'
   import { routes } from './routes'
-
-  onMount(() => {
-    console.log('App mounted')
-  })
+  import Navbar from './components/Shared/Navbar.svelte'
 </script>
 
 <style>

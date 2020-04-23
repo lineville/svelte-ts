@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { decideMove, shouldSplit, shouldDouble, shouldHit } from '../src/utils/BasicStrategy'
+import { decideMove, shouldSplit, shouldDouble, shouldHit, computeScore } from '../src/utils/BasicStrategy'
 
 describe('Basic Strategy', () => {
   it('should split aces', () => {
@@ -110,5 +110,26 @@ describe('Basic Strategy', () => {
       { name: 'Six', value: 6, optionalValue: null, suite: '♠️' },
     )
     expect(result).to.be.false
+  })
+})
+
+describe('Compute Score', () => {
+  it('edge case should be 21', () => {
+    const result = computeScore([
+      { name: 'Ace', value: 11, optionalValue: 1, suite: '♠️' },
+      { name: 'Three', value: 3, optionalValue: null, suite: '♠️' },
+      { name: 'Two', value: 2, optionalValue: null, suite: '♠️' },
+      { name: 'Ace', value: 11, optionalValue: 1, suite: '♠️' },
+      { name: 'Four', value: 4, optionalValue: null, suite: '♠️' },
+    ])
+    expect(result).to.be.equal(21)
+  })
+
+  it('should be 12', () => {
+    const result = computeScore([
+      { name: 'Ace', value: 11, optionalValue: 1, suite: '♠️' },
+      { name: 'Ace', value: 11, optionalValue: 1, suite: '♠️' },
+    ])
+    expect(result).to.be.equal(12)
   })
 })

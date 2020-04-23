@@ -85,7 +85,6 @@
   }
 
   onMount(async () => {
-    console.log('Virus Timeline Mounted')
     try {
       let result = await fetch(apiURL)
       data = await result.json()

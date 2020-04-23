@@ -15,8 +15,6 @@
   }
 
   onMount(async () => {
-    console.log('Virus Stats Global Mounted')
-
     try {
       let allCountries = await fetch(apiURL)
       countryOptions = await allCountries.json()

@@ -77,6 +77,13 @@ export const decideMove = (userCards: Array<Card>, dealerUpCard: Card): Decision
   if (shouldDouble(userCards, dealerUpCard)) {
     return 'DoubleDown'
   }
+  if (computeScore(userCards) > 17) {
+    return 'Stay'
+  }
+
+  if (computeScore(userCards) < 8) {
+    return 'Hit'
+  }
 
   if (shouldHit(userCards, dealerUpCard)) {
     return 'Hit'
@@ -109,12 +116,25 @@ export const shouldDouble = (userCards: Array<Card>, dealerUpCard: Card): boolea
   return false
 }
 
-export const shouldHit = (userCards: Array<Card>, dealerUpCard: Card): boolean => {
-  if (userCards.filter((c) => c.name === 'Ace').length > 0) {
-    const nonAceCard = userCards.filter((c) => c.name !== 'Ace')[0]
-    return softTable[nonAceCard.value - 2][dealerUpCard.value - 2] === 'Hit'
+const isHardHand = (hand: Array<Card>): boolean => {
+  if (hand.filter((c) => c.name === 'Ace').length === 0) {
+    return true
   } else {
+    const hardCards = hand.filter((c) => c.name !== 'Ace')
+    if (computeScore(hardCards) > 9) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export const shouldHit = (userCards: Array<Card>, dealerUpCard: Card): boolean => {
+  if (isHardHand(userCards)) {
     return hardTable[computeScore(userCards) - 8][dealerUpCard.value - 2] === 'Hit'
+  } else {
+    const hardCards = userCards.filter((c) => c.name !== 'Ace')
+    return softTable[computeScore(hardCards) - 2][dealerUpCard.value - 2] === 'Hit'
   }
 }
 
@@ -124,13 +144,12 @@ export const computeScore = (cards: Array<Card>): number => {
     return highestScore
   }
 
-  cards
-    .filter((card) => card.optionalValue !== null)
-    .forEach((ace) => {
-      highestScore -= 10
-      if (highestScore <= 21) {
-        return highestScore
-      }
-    })
+  const numberOfAces = cards.filter((card) => card.optionalValue !== null).length
+  for (let i = 0; i < numberOfAces; i++) {
+    highestScore -= 10
+    if (highestScore <= 21) {
+      return highestScore
+    }
+  }
   return highestScore
 }

@@ -14,7 +14,6 @@
   }
 
   onMount(async () => {
-    console.log('Virus Stats Domestic Mounted')
     try {
       let res = await fetch(apiURL)
       data = await res.json()
