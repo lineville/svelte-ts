@@ -10,6 +10,7 @@
     optionalValue: number | null
     suite: Suite
   }
+  type Decision = 'Hit' | 'Stay' | 'DoubleDown' | 'Split'
 
   // ------ Click Handlers ----------
   const hit = (): void => {
@@ -23,6 +24,7 @@
     } else {
       hint = donsHint(userCards, dealerCards[0])
     }
+    checkForCorrectMove('Hit')
   }
 
   const handlePeek = (): void => {
@@ -47,6 +49,8 @@
       push = true
       balance += bet
     }
+
+    checkForCorrectMove('Stay')
   }
 
   const stay1 = (): void => {
@@ -70,6 +74,7 @@
     dealerTurn = false
     userWon = false
     push = false
+    handsPlayed += 1
     userCards = [deck[0], deck[2]]
     dealerCards = [deck[1], deck[3]]
     canSplit = userCards[0].name === userCards[1].name
@@ -89,6 +94,7 @@
     // TODO if splitting aces cannot hit after delt cards
     leftHandDone = true
     rightHandDone = true
+    checkForCorrectMove('Split')
   }
 
   const toggleHint = (): void => {
@@ -115,6 +121,7 @@
       stay()
     }
     bet /= 2
+    checkForCorrectMove('DoubleDown')
   }
 
   // ------- Utils ------------
@@ -242,6 +249,13 @@
     }
   }
 
+  const checkForCorrectMove = (move: Decision): void => {
+    const correctDecision = decideMove(userCards, dealerCards[0])
+    if (move === correctDecision) {
+      correctDecisions += 1
+    }
+  }
+
   // ----------- State -----------
 
   let balance = 100
@@ -257,6 +271,10 @@
   let leftHandDone = false
   let rightHandDone = false
   let hintColor = 'is-info'
+  let handsPlayed = 1
+  let correctDecisions = 1
+  let correctPct: number
+  $: correctPct = Math.floor((correctDecisions / handsPlayed) * 100)
 
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
@@ -305,6 +323,12 @@
     margin-top: 80px;
   }
 
+  #correctPct {
+    width: 300px;
+    margin-left: 10px;
+    margin-top: 5px;
+  }
+
   #controlBar {
     margin-left: 15vw;
   }
@@ -350,6 +374,30 @@
     <div class="is-centered" id="controlBar">
       <div class="field is-horizontal">
         <div>
+          {#if split}
+            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone || isBusted(leftHand)}>
+              <span>Hit 1</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+            </button>
+            <button class="button is-danger is-outlined" on:click={stay1} disabled={leftHandDone || isBusted(leftHand)}>
+              <span>Stay 1</span>
+              <span class="icon is-small">
+                <i class="fas fa-hand-paper" />
+              </span>
+            </button>
+          {:else}
+            <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
+              <span class="icon is-small">
+                <i class="fas fa-hand-holding-medical" />
+              </span>
+              <span>Hit</span>
+              <span class="icon is-small">
+                <i class="fas fa-chevron-right" />
+              </span>
+            </button>
+          {/if}
 
           {#if split}
             <button
@@ -378,31 +426,6 @@
               <span>Stay</span>
               <span class="icon is-small">
                 <i class="fas fa-chevron-left" />
-              </span>
-            </button>
-          {/if}
-
-          {#if split}
-            <button class="button is-primary is-outlined" on:click={hit1} disabled={leftHandDone || isBusted(leftHand)}>
-              <span>Hit 1</span>
-              <span class="icon is-small">
-                <i class="fas fa-hand-holding-medical" />
-              </span>
-            </button>
-            <button class="button is-danger is-outlined" on:click={stay1} disabled={leftHandDone || isBusted(leftHand)}>
-              <span>Stay 1</span>
-              <span class="icon is-small">
-                <i class="fas fa-hand-paper" />
-              </span>
-            </button>
-          {:else}
-            <button class="button is-primary is-outlined" on:click={hit} disabled={lockedIn}>
-              <span class="icon is-small">
-                <i class="fas fa-hand-holding-medical" />
-              </span>
-              <span>Hit</span>
-              <span class="icon is-small">
-                <i class="fas fa-chevron-right" />
               </span>
             </button>
           {/if}
@@ -481,6 +504,11 @@
 
         </div>
 
+      </div>
+
+      <div class="field is-horizontal">
+        <label for="correctPct">Basic Strategy Correctness</label>
+        <progress id="correctPct" class="progress is-primary" value={correctPct} max="100" />
       </div>
     </div>
 

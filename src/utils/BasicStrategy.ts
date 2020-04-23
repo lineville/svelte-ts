@@ -70,15 +70,16 @@ const hardTable = [
 ]
 
 export const decideMove = (userCards: Array<Card>, dealerUpCard: Card): Decision => {
+  if (computeScore(userCards) > 17) {
+    return 'Stay'
+  }
+
   if (shouldSplit(userCards, dealerUpCard)) {
     return 'Split'
   }
 
   if (shouldDouble(userCards, dealerUpCard)) {
     return 'DoubleDown'
-  }
-  if (computeScore(userCards) > 17) {
-    return 'Stay'
   }
 
   if (computeScore(userCards) < 8) {
