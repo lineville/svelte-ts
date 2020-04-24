@@ -284,6 +284,7 @@
         insuranceOpen = false
       }, 2000)
     }
+    hint = donsHint(userCards, dealerCards[0])
   }
 
   const denyInsurance = (): void => {
