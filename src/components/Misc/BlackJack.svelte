@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import { fly, slide } from 'svelte/transition'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import CardList from './CardList.svelte'
   import { decideMove, computeScore } from '../../utils/BasicStrategy'
+
+  const localBucket = window.localStorage
 
   type Suite = '❤️' | '♦' | '♣️' | '♠️'
   type Card = {
@@ -144,6 +147,9 @@
     if (deck.length < 15) {
       deck = shuffle(newDeck())
     }
+
+    // * Write to local storage
+    localBucket.setItem('Balance', balance.toString())
   }
 
   const handleSplitHand = (): void => {
@@ -489,6 +495,17 @@
   let hint = donsHint(userCards, dealerCards[0])
   let wonInsurance = false
   let betOnInsurance = false
+
+  onMount(() => {
+    const storageValue = localBucket.getItem('Balance')
+    if (storageValue === null) {
+      console.log('Nothing was in storage so set it to: ', balance)
+      localBucket.setItem('Balance', balance.toString())
+    } else {
+      console.log('Storage contained balance: ', balance)
+      balance = parseInt(storageValue || '')
+    }
+  })
 </script>
 
 <style>
