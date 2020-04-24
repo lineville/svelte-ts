@@ -167,6 +167,7 @@
     if (leftHand[0].name === 'Ace') {
       leftHandDone = true
       rightHandDone = true
+      stay2()
     } else {
       hint = donsHint(leftHand, dealerCards[0])
     }
