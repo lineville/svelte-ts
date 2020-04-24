@@ -131,11 +131,13 @@
     dealerTurn = false
     userWon = false
     push = false
+    wonInsurance = false
+    betOnInsurance = false
     leftHandDone = false
     rightHandDone = false
     userCards = [deck[0], deck[2]]
     dealerCards = [deck[1], deck[3]]
-    insuranceOpen = dealerCards[0].name === 'Ace'
+    insuranceOpen = dealerCards[0].name === 'Ace' && computeScore(userCards) !== 21
     canSplit = userCards[0].name === userCards[1].name
     hint = donsHint(userCards, dealerCards[0])
     deck = deck.slice(4)
@@ -260,7 +262,24 @@
     bet /= 2
   }
 
-  const handleInsurance = (): void => {}
+  const handleInsurance = (): void => {
+    lockedIn = true
+    betOnInsurance = true
+
+    if (computeScore(dealerCards) === 21) {
+      wonInsurance = true
+      userWon = false
+      push = false
+    } else {
+      wonInsurance = false
+      balance -= insuranceBet
+      lockedIn = false
+      setTimeout(() => {
+        insuranceOpen = false
+      }, 2000)
+    }
+  }
+
   const denyInsurance = (): void => {
     insuranceOpen = false
   }
@@ -403,6 +422,10 @@
   }
 
   const donsHint = (userCards: Array<Card>, dealerUpCard: Card): string => {
+    if (insuranceOpen) {
+      hintColor = 'is-info'
+      return "Most of the time insurance is a bad bet. Only go for it if you really think they've got 21"
+    }
     let decision = decideMove(userCards, dealerUpCard, !split)
     switch (decision) {
       case 'Stay':
@@ -458,13 +481,15 @@
 
   let deck = shuffle(newDeck())
   // let dealerCards: Array<Card> = [deck[0], deck[2]]
-  let dealerCards: Array<Card> = [{ name: 'Ace', value: 11, optionalValue: 1, suite: '♣️' }, deck[2]]
+  let dealerCards: Array<Card> = [{ name: 'Ace', value: 11, optionalValue: 1, suite: '♦' }, deck[2]]
   let userCards: Array<Card> = [deck[1], deck[3]]
-  let insuranceOpen = dealerCards[0].name === 'Ace'
+  let insuranceOpen = dealerCards[0].name === 'Ace' && computeScore(userCards) !== 21
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
   let rightHand: Array<Card> = []
   let hint = donsHint(userCards, dealerCards[0])
+  let wonInsurance = false
+  let betOnInsurance = false
 </script>
 
 <style>
@@ -567,7 +592,15 @@
         </span>
 
         <span class="control has-icons-left">
-          <input class="input is-info" type="number" id="bet" name="bet" bind:value={bet} disabled={!lockedIn} />
+          <input
+            class="input is-info"
+            type="number"
+            id="bet"
+            name="bet"
+            bind:value={bet}
+            disabled={!lockedIn}
+            min={1}
+            max={balance} />
 
           <span class="icon is-small is-left">
             <i class="fa fa-dollar-sign" id="betDollarSign" />
@@ -585,35 +618,64 @@
     {/if}
 
     <!-- Control Bar -->
-    <div class="is-centered box" id="controlBar" >
+    <div class="is-centered box" id="controlBar">
 
       {#if insuranceOpen}
         <div class="field is-horizontal">
           <div transition:fly={{ x: -1000, duration: 500 }}>
+            <span class="tag is-large is-info">Insurance ?</span>
             <span class="control has-icons-left">
               <input
                 class="input is-info"
                 type="number"
                 id="insuranceBet"
                 name="insuranceBet"
-                bind:value={insuranceBet} />
+                bind:value={insuranceBet}
+                max={Math.floor(bet / 2)}
+                min={1} />
 
               <span class="icon is-small is-left">
                 <i class="fa fa-dollar-sign" />
               </span>
             </span>
 
-            <span class="tag is-large is-info">Insurance ?</span>
             <button class="button is-success is-outlined" on:click={handleInsurance}>
               <span class="icon is-small">
                 <i class="fas fa-check" />
               </span>
             </button>
+
             <button class="button is-danger is-outlined" on:click={denyInsurance}>
               <span class="icon is-small">
                 <i class="fas fa-times" />
               </span>
             </button>
+
+            {#if wonInsurance}
+              <span
+                class="icon is-small"
+                in:fly={{ y: -1000, duration: 500 }}
+                out:fly={{ y: -1000, duration: 500, delay: 800 }}>
+                <i class="fas fa-coins" />
+              </span>
+
+              <span
+                class={`tag is-light is-success is-medium`}
+                id="infoTag"
+                transition:fly={{ x: 1000, duration: 500 }}>
+                You won ${insuranceBet} from the insurance side bet even though you lost the hand.
+              </span>
+            {/if}
+
+            {#if betOnInsurance && !wonInsurance}
+              <span
+                class={`tag is-light is-danger is-medium`}
+                id="infoTag"
+                transition:fly={{ x: 1000, duration: 500, delay: 500 }}>
+                You lost ${insuranceBet} from the insurance side bet. Don't worry you've still got a chance!
+              </span>
+            {/if}
+
           </div>
 
         </div>
