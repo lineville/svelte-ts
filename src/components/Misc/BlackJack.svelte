@@ -282,6 +282,7 @@
       lockedIn = false
       setTimeout(() => {
         insuranceOpen = false
+        hint = donsHint(userCards, dealerCards[0])
       }, 2000)
     }
     hint = donsHint(userCards, dealerCards[0])
@@ -604,7 +605,7 @@
     {#if lockedIn}
       <div
         class={`notification is-narrow ${userWon ? 'is-success' : push ? 'is-info' : 'is-danger'}`}
-        transition:fly={{ x: -1000, duration: 500, delay: 500 }}>
+        transition:fly={{ x: -1000, duration: 500, delay: 200 }}>
         <span class={`tag is-large ${userWon ? 'is-success' : push ? 'is-info' : 'is-danger'}`} id="wonOrLost">
           <strong>{userWon ? 'You Won!' : push ? 'You Tied!' : 'You Lost!'}</strong>
         </span>
