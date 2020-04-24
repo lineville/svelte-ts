@@ -197,11 +197,11 @@
     rightHand = [...rightHand, newCard]
     if (isBusted(rightHand)) {
       rightHandDone = true
+      lockedIn = true
 
       if (
-        isBusted(dealerCards) ||
-        computeScore(leftHand) > computeScore(dealerCards) ||
-        computeScore(leftHand) === 21
+        !isBusted(leftHand) &&
+        (isBusted(dealerCards) || computeScore(leftHand) > computeScore(dealerCards) || computeScore(leftHand) === 21)
       ) {
         userWon = false
         push = true
