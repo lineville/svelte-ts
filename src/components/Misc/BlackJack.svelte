@@ -451,11 +451,7 @@
 
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
-  // let userCards: Array<Card> = [deck[1], deck[3]]
-  let userCards: Array<Card> = [
-    { name: 'Nine', value: 9, optionalValue: null, suite: '❤️' },
-    { name: 'Nine', value: 9, optionalValue: null, suite: '♦' },
-  ]
+  let userCards: Array<Card> = [deck[1], deck[3]]
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
   let rightHand: Array<Card> = []
