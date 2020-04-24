@@ -111,6 +111,42 @@ describe('Basic Strategy', () => {
     )
     expect(result).to.be.false
   })
+
+  it('should split 9s', () => {
+    const result = decideMove(
+      [
+        { name: 'Nine', value: 9, optionalValue: null, suite: '♠️' },
+        { name: 'Nine', value: 9, optionalValue: null, suite: '♦' },
+      ],
+      { name: 'Six', value: 6, optionalValue: null, suite: '♣️' },
+      true,
+    )
+    expect(result).to.be.equal('Split')
+  })
+
+  it('should not split 9s', () => {
+    const result = decideMove(
+      [
+        { name: 'Nine', value: 9, optionalValue: null, suite: '♠️' },
+        { name: 'Nine', value: 9, optionalValue: null, suite: '♦' },
+      ],
+      { name: 'Seven', value: 7, optionalValue: null, suite: '♣️' },
+      true,
+    )
+    expect(result).to.be.equal('Stay')
+  })
+
+  it('should not hit 21', () => {
+    const result = decideMove(
+      [
+        { name: 'Ace', value: 11, optionalValue: 1, suite: '♠️' },
+        { name: 'King', value: 10, optionalValue: null, suite: '♠️' },
+      ],
+      { name: 'Seven', value: 7, optionalValue: null, suite: '♠️' },
+      true,
+    )
+    expect(result).to.be.equal('Stay')
+  })
 })
 
 describe('Compute Score', () => {
@@ -141,6 +177,7 @@ describe('Compute Score', () => {
         { name: 'Three', value: 3, optionalValue: null, suite: '♠️' },
       ],
       { name: 'Four', value: 4, optionalValue: null, suite: '♠️' },
+      true,
     )
     expect(result).to.be.equal('Hit')
   })

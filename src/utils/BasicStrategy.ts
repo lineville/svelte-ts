@@ -69,13 +69,13 @@ const hardTable = [
   ['Stay', 'Stay', 'Stay', 'Stay', 'Stay', 'Stay', 'Stay', 'Stay', 'Stay', 'Stay'],
 ]
 
-export const decideMove = (userCards: Array<Card>, dealerUpCard: Card): Decision => {
-  if (computeScore(userCards) > 17) {
-    return 'Stay'
+export const decideMove = (userCards: Array<Card>, dealerUpCard: Card, canSplit: boolean): Decision => {
+  if (canSplit && shouldSplit(userCards, dealerUpCard)) {
+    return 'Split'
   }
 
-  if (shouldSplit(userCards, dealerUpCard)) {
-    return 'Split'
+  if (computeScore(userCards) > 17) {
+    return 'Stay'
   }
 
   if (shouldDouble(userCards, dealerUpCard)) {
