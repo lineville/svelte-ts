@@ -131,6 +131,8 @@
     dealerTurn = false
     userWon = false
     push = false
+    leftHandDone = false
+    rightHandDone = false
     userCards = [deck[0], deck[2]]
     dealerCards = [deck[1], deck[3]]
     canSplit = userCards[0].name === userCards[1].name
