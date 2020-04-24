@@ -481,11 +481,7 @@
 
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
-  // let userCards: Array<Card> = [deck[1], deck[3]]
-  let userCards: Array<Card> = [
-    { name: 'Ace', value: 11, optionalValue: 1, suite: '❤️' },
-    { name: 'Ace', value: 11, optionalValue: 1, suite: '♦' },
-  ]
+  let userCards: Array<Card> = [deck[1], deck[3]]
   let insuranceOpen = dealerCards[0].name === 'Ace' && computeScore(userCards) !== 21
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
