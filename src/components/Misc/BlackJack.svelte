@@ -4,10 +4,11 @@
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import CardList from './CardList.svelte'
-  import { decideMove, computeScore } from '../../utils/BasicStrategy'
+  import { decideMove, computeScore, cardCount } from '../../utils/BasicStrategy'
 
   const localBucket = window.localStorage
 
+  // -------------Types ------------------
   type Suite = '❤️' | '♦' | '♣️' | '♠️'
   type Card = {
     name: string
@@ -17,17 +18,40 @@
   }
   type Decision = 'Hit' | 'Stay' | 'DoubleDown' | 'Split'
 
-  // ------ Click Handlers ----------
+  // --------BlackJack Actions -----------
 
-  const handleHit = (): void => {
-    checkForCorrectMove('Hit', userCards)
-    hit()
+  const doubleDown = (hand: Array<Card>, hitFunc: () => void, stayFunction: () => void): void => {
+    balance -= bet
+    bet *= 2
+    hitFunc()
+    if (!isBusted(hand)) {
+      stayFunction()
+    }
+    bet /= 2
+  }
+
+  const splitHand = (): void => {
+    leftHand = [userCards[0], deck[0]]
+    rightHand = [userCards[1], deck[1]]
+    deckCount += cardCount(deck[0]) + cardCount(deck[1]) + cardCount(deck[2]) + cardCount(deck[3])
+    deck = deck.slice(2)
+    userCards = []
+    split = true
+    balance -= bet
+    if (leftHand[0].name === 'Ace') {
+      leftHandDone = true
+      rightHandDone = true
+      stay2()
+    } else {
+      hint = donsHint(leftHand, dealerCards[0])
+    }
   }
 
   const hit = (): void => {
     const newCard = deck[0]
     deck = deck.slice(1)
     userCards = [...userCards, newCard]
+    deckCount += cardCount(newCard)
     if (isBusted(userCards)) {
       lockedIn = true
       userWon = false
@@ -37,18 +61,42 @@
     }
   }
 
-  const handlePeek = (): void => {
-    peekDealer = !peekDealer
+  const hit1 = (): void => {
+    const newCard = deck[0]
+    deck = deck.slice(1)
+    leftHand = [...leftHand, newCard]
+    if (isBusted(leftHand)) {
+      leftHandDone = true
+    } else {
+      hint = donsHint(leftHand, dealerCards[0])
+    }
   }
 
-  const handleStay = (): void => {
-    checkForCorrectMove('Stay', userCards)
-    stay()
+  const hit2 = (): void => {
+    const newCard = deck[0]
+    deck = deck.slice(1)
+    rightHand = [...rightHand, newCard]
+    if (isBusted(rightHand)) {
+      rightHandDone = true
+      lockedIn = true
+
+      if (
+        !isBusted(leftHand) &&
+        (isBusted(dealerCards) || computeScore(leftHand) > computeScore(dealerCards) || computeScore(leftHand) === 21)
+      ) {
+        userWon = false
+        push = true
+      } else if (computeScore(leftHand) === computeScore(dealerCards)) {
+        userWon = false
+        push = false
+      }
+    } else {
+      hint = donsHint(rightHand, dealerCards[0])
+    }
   }
 
   const stay = (): void => {
     lockedIn = true
-    dealerTurn = true
     dealerCards = playOutDealerHand()
 
     if (
@@ -66,26 +114,14 @@
     }
   }
 
-  const handleStay1 = (): void => {
-    checkForCorrectMove('Stay', leftHand)
-    stay1()
-  }
-
   const stay1 = (): void => {
     leftHandDone = true
     hint = donsHint(rightHand, dealerCards[0])
   }
 
-  const handleStay2 = (): void => {
-    checkForCorrectMove('Stay', rightHand)
-    stay2()
-  }
-
   const stay2 = (): void => {
     rightHandDone = true
     lockedIn = true
-    dealerTurn = true
-    dealerTurn = true
     dealerCards = playOutDealerHand()
 
     let leftWon = false
@@ -126,12 +162,37 @@
     }
   }
 
+  // ------ Click Handlers ----------
+
+  const handleHit = (hand: Array<Card>, hitFunc: () => void): void => {
+    checkForCorrectMove('Hit', hand)
+    hitFunc()
+  }
+
+  const handleStay = (hand: Array<Card>, stayFunc: () => void): void => {
+    checkForCorrectMove('Stay', hand)
+    stayFunc()
+  }
+
+  const handleSplitHand = (): void => {
+    checkForCorrectMove('Split', userCards)
+    splitHand()
+  }
+
+  const handleDoubleDown = (hand: Array<Card>, hitFunc: () => void, stayFunc: () => void): void => {
+    checkForCorrectMove('DoubleDown', hand)
+    doubleDown(hand, hitFunc, stayFunc)
+  }
+
+  const handlePeek = (): void => {
+    peekDealer = !peekDealer
+  }
+
   const nextHand = (): void => {
     balance -= bet
     handCompleted = false
     lockedIn = false
     split = false
-    dealerTurn = false
     userWon = false
     push = false
     wonInsurance = false
@@ -143,34 +204,15 @@
     insuranceOpen = dealerCards[0].name === 'Ace' && computeScore(userCards) !== 21
     canSplit = userCards[0].name === userCards[1].name
     hint = donsHint(userCards, dealerCards[0])
+    deckCount += cardCount(deck[0]) + cardCount(deck[1]) + cardCount(deck[2]) + cardCount(deck[3])
     deck = deck.slice(4)
     if (deck.length < 15) {
       deck = shuffle(newDeck())
+      deckCount = 0
     }
 
     // * Write to local storage
     localBucket.setItem('Balance', balance.toString())
-  }
-
-  const handleSplitHand = (): void => {
-    checkForCorrectMove('Split', userCards)
-    splitHand()
-  }
-
-  const splitHand = (): void => {
-    leftHand = [userCards[0], deck[0]]
-    rightHand = [userCards[1], deck[1]]
-    deck = deck.slice(2)
-    userCards = []
-    split = true
-    balance -= bet
-    if (leftHand[0].name === 'Ace') {
-      leftHandDone = true
-      rightHandDone = true
-      stay2()
-    } else {
-      hint = donsHint(leftHand, dealerCards[0])
-    }
   }
 
   const toggleHint = (): void => {
@@ -178,95 +220,6 @@
     if (hintEnabled) {
       hideInfoMessage = false
     }
-  }
-
-  const handleHit1 = (): void => {
-    checkForCorrectMove('Hit', leftHand)
-    hit1()
-  }
-
-  const hit1 = (): void => {
-    const newCard = deck[0]
-    deck = deck.slice(1)
-    leftHand = [...leftHand, newCard]
-    if (isBusted(leftHand)) {
-      leftHandDone = true
-    } else {
-      hint = donsHint(leftHand, dealerCards[0])
-    }
-  }
-
-  const handleHit2 = (): void => {
-    checkForCorrectMove('Hit', rightHand)
-    hit2()
-  }
-
-  const hit2 = (): void => {
-    const newCard = deck[0]
-    deck = deck.slice(1)
-    rightHand = [...rightHand, newCard]
-    if (isBusted(rightHand)) {
-      rightHandDone = true
-      lockedIn = true
-
-      if (
-        !isBusted(leftHand) &&
-        (isBusted(dealerCards) || computeScore(leftHand) > computeScore(dealerCards) || computeScore(leftHand) === 21)
-      ) {
-        userWon = false
-        push = true
-      } else if (computeScore(leftHand) === computeScore(dealerCards)) {
-        userWon = false
-        push = false
-      }
-    } else {
-      hint = donsHint(rightHand, dealerCards[0])
-    }
-  }
-
-  const handleDouble1 = (): void => {
-    checkForCorrectMove('DoubleDown', leftHand)
-    double1()
-  }
-
-  const double1 = (): void => {
-    balance -= bet
-    bet *= 2
-    hit1()
-    if (!isBusted(leftHand)) {
-      stay1()
-    }
-    bet /= 2
-  }
-
-  const handleDouble2 = (): void => {
-    checkForCorrectMove('DoubleDown', rightHand)
-    double2()
-  }
-
-  const double2 = (): void => {
-    balance -= bet
-    bet *= 2
-    hit2()
-    if (!isBusted(rightHand)) {
-      stay2()
-    }
-    bet /= 2
-  }
-
-  const handleDoubleDown = (): void => {
-    checkForCorrectMove('DoubleDown', userCards)
-    doubleDown()
-  }
-
-  const doubleDown = (): void => {
-    balance -= bet
-    bet *= 2
-    hit()
-    if (!isBusted(userCards)) {
-      stay()
-    }
-    bet /= 2
   }
 
   const handleInsurance = (): void => {
@@ -381,6 +334,7 @@
       const newCard = deck[0]
       deck = deck.slice(1)
       dealerCards = [...dealerCards, newCard]
+      deckCount += cardCount(newCard)
     }
 
     return dealerCards
@@ -396,23 +350,23 @@
       case 'ArrowLeft':
       case 'a':
         if (!lockedIn && !split) {
-          handleStay()
+          handleStay(userCards, stay)
         }
         if (split && !leftHandDone) {
-          handleStay1()
+          handleStay(leftHand, stay1)
         } else if (split && leftHandDone && !rightHandDone) {
-          handleStay2()
+          handleStay(rightHand, stay2)
         }
         break
       case 'ArrowRight':
       case 'd':
         if (!lockedIn && !split) {
-          handleHit()
+          handleHit(userCards, hit)
         }
         if (split && !leftHandDone) {
-          handleHit1()
+          handleHit(leftHand, hit1)
         } else if (split && leftHandDone && !rightHandDone) {
-          handleHit2()
+          handleHit(rightHand, hit2)
         }
         break
       case 'ArrowUp':
@@ -424,13 +378,13 @@
       case 'ArrowDown':
       case 's':
         if (!lockedIn && userCards.length === 2 && !split) {
-          handleDoubleDown()
+          handleDoubleDown(userCards, hit, stay)
         }
 
         if (split && !leftHandDone) {
-          handleDouble1()
+          handleDoubleDown(leftHand, hit1, stay1)
         } else if (split && leftHandDone && !rightHandDone) {
-          handleDouble2()
+          handleDoubleDown(rightHand, hit2, stay2)
         }
         break
       default:
@@ -482,7 +436,6 @@
   let lockedIn = false
   let split = false
   let hintEnabled = false
-  let dealerTurn = false
   let userWon = false
   let push = false
   let leftHandDone = false
@@ -499,6 +452,8 @@
   let deck = shuffle(newDeck())
   let dealerCards: Array<Card> = [deck[0], deck[2]]
   let userCards: Array<Card> = [deck[1], deck[3]]
+  let deckCount = cardCount(deck[0]) + cardCount(deck[1]) + cardCount(deck[3])
+  deck = deck.slice(4)
   let insuranceOpen = dealerCards[0].name === 'Ace' && computeScore(userCards) !== 21
   let canSplit = userCards[0].name === userCards[1].name
   let leftHand: Array<Card> = []
@@ -507,6 +462,7 @@
   let wonInsurance = false
   let betOnInsurance = false
 
+  // Load in balance from localStorage on component mounting
   onMount(() => {
     const storageValue = localBucket.getItem('Balance')
     if (storageValue === null) {
@@ -713,7 +669,7 @@
             {#if split}
               <button
                 class="button is-danger is-outlined"
-                on:click={handleStay1}
+                on:click={() => handleStay(leftHand, stay1)}
                 disabled={leftHandDone || isBusted(leftHand)}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-left" />
@@ -725,7 +681,7 @@
               </button>
               <button
                 class="button is-success is-outlined"
-                on:click={handleDouble1}
+                on:click={() => handleDoubleDown(leftHand, hit1, stay1)}
                 disabled={leftHandDone || leftHand.length > 2}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-down" />
@@ -737,7 +693,7 @@
               </button>
               <button
                 class="button is-primary is-outlined"
-                on:click={handleHit1}
+                on:click={() => handleHit(leftHand, hit1)}
                 disabled={leftHandDone || isBusted(leftHand)}>
                 <span class="icon is-small">
                   <i class="fas fa-hand-holding-medical" />
@@ -750,7 +706,7 @@
 
               <button
                 class="button is-danger is-outlined"
-                on:click={handleStay2}
+                on:click={() => handleStay(rightHand, stay2)}
                 disabled={!(leftHandDone || isBusted(leftHand)) || rightHandDone || isBusted(rightHand)}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-left" />
@@ -762,7 +718,7 @@
               </button>
               <button
                 class="button is-success is-outlined"
-                on:click={handleDouble2}
+                on:click={() => handleDoubleDown(rightHand, hit2, stay2)}
                 disabled={!leftHandDone || rightHand.length > 2 || rightHandDone}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-down" />
@@ -774,7 +730,7 @@
               </button>
               <button
                 class="button is-primary is-outlined"
-                on:click={handleHit2}
+                on:click={() => handleHit(rightHand, hit2)}
                 disabled={!(leftHandDone || isBusted(leftHand) || isBusted(rightHand)) || rightHandDone}>
                 <span class="icon is-small">
                   <i class="fas fa-hand-holding-medical" />
@@ -785,7 +741,10 @@
                 </span>
               </button>
             {:else}
-              <button class="button is-danger is-outlined" on:click={handleStay} disabled={lockedIn}>
+              <button
+                class="button is-danger is-outlined"
+                on:click={() => handleStay(userCards, stay)}
+                disabled={lockedIn}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-left" />
                 </span>
@@ -797,7 +756,7 @@
 
               <button
                 class="button is-success is-outlined"
-                on:click={handleDoubleDown}
+                on:click={() => handleDoubleDown(userCards, hit, stay)}
                 disabled={lockedIn || userCards.length !== 2}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-down" />
@@ -822,7 +781,10 @@
                 </span>
               </button>
 
-              <button class="button is-primary is-outlined" on:click={handleHit} disabled={lockedIn}>
+              <button
+                class="button is-primary is-outlined"
+                on:click={() => handleHit(userCards, hit)}
+                disabled={lockedIn}>
                 <span class="icon is-small">
                   <i class="fas fa-hand-holding-medical" />
                 </span>
@@ -877,6 +839,12 @@
         <label for="correctPct">Basic Strategy Correctness</label>
         <progress id="correctPct" class="progress is-primary" value={correctPct} max="100" />
         <span>{correctPct}%</span>
+      </div>
+
+      <div class="field is-horizontal">
+        <span class={`tag is-light is-medium ${deckCount < 0 ? 'is-danger' : deckCount > 0 ? 'is-success' : ''}`}>
+          <p class="subtitle">Count: {deckCount}</p>
+        </span>
       </div>
 
       {#if hintEnabled}
@@ -939,6 +907,7 @@
       </span>
       <p class="subtitle">Up Next</p>
     </span>
+
     <button class="button is-dark is-outlined" on:click={handlePeek}>
 
       <span>{peekDealer ? 'Play Clean' : 'Cheat'}</span>

@@ -160,3 +160,15 @@ export const computeScore = (cards: Array<Card>): number => {
   }
   return highestScore
 }
+
+export const cardCount = (card: Card): number => {
+  if (card.value < 7) {
+    return 1
+  }
+
+  if (card.value > 9) {
+    return -1
+  }
+
+  return 0
+}
