@@ -150,7 +150,6 @@
     who: HandType,
   ): void => {
     checkForCorrectMove('Hit', hand)
-    console.log(hitFunc)
     hitFunc(hand, handleBust, who)
   }
 
@@ -478,10 +477,8 @@
   onMount(() => {
     const storageValue = localBucket.getItem('Balance')
     if (storageValue === null) {
-      console.log('Nothing was in storage so set it to: ', balance)
       localBucket.setItem('Balance', balance.toString())
     } else {
-      console.log('Storage contained balance: ', balance)
       balance = parseInt(storageValue || '')
     }
   })
