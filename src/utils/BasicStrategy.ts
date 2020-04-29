@@ -117,19 +117,6 @@ export const shouldDouble = (userCards: Array<Card>, dealerUpCard: Card): boolea
   return false
 }
 
-const isHardHand = (hand: Array<Card>): boolean => {
-  if (hand.filter((c) => c.name === 'Ace').length === 0) {
-    return true
-  } else {
-    const hardCards = hand.filter((c) => c.name !== 'Ace')
-    if (computeScore(hardCards) > 9) {
-      return true
-    }
-  }
-
-  return false
-}
-
 export const shouldHit = (userCards: Array<Card>, dealerUpCard: Card): boolean => {
   if (isHardHand(userCards)) {
     return (
@@ -171,4 +158,17 @@ export const cardCount = (card: Card): number => {
   }
 
   return 0
+}
+
+const isHardHand = (hand: Array<Card>): boolean => {
+  if (hand.filter((c) => c.name === 'Ace').length === 0) {
+    return true
+  } else {
+    const hardCards = hand.filter((c) => c.name !== 'Ace')
+    if (computeScore(hardCards) > 9) {
+      return true
+    }
+  }
+
+  return false
 }

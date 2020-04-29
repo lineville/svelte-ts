@@ -11,12 +11,27 @@
   // -------------Types ------------------
   type Suite = '❤️' | '♦' | '♣️' | '♠️'
   type Decision = 'Hit' | 'Stay' | 'DoubleDown' | 'Split'
+  type HandType = 'User' | 'Dealer' | 'Left' | 'Right'
   type Card = { name: string; value: number; optionalValue: number | null; suite: Suite }
 
   // --------BlackJack Actions -----------
 
-  const hit = (hand: Array<Card>, bustFunc: () => void): void => {
+  const hit = (hand: Array<Card>, bustFunc: () => void, who: HandType): void => {
     hand = [...hand, drawCard()]
+    switch (who) {
+      case 'User':
+        userCards = hand
+        break
+      case 'Dealer':
+        dealerCards = hand
+        break
+      case 'Left':
+        leftHand = hand
+        break
+      case 'Right':
+        rightHand = hand
+        break
+    }
     if (isBusted(hand)) {
       bustFunc()
     } else {
@@ -45,7 +60,7 @@
 
   const doubleDown = (
     hand: Array<Card>,
-    hitFunc: (hand: Array<Card>, bustFunc: () => void) => void,
+    hitFunc: (hand: Array<Card>, bustFunc: () => void, who: HandType) => void,
     stayFunction: () => void,
   ): void => {
     balance -= bet
@@ -57,7 +72,7 @@
           }
         : handleSplitBust
       : handleBust
-    hitFunc(hand, bustFunc)
+    hitFunc(hand, bustFunc, 'User')
     if (!isBusted(hand)) {
       stayFunction()
     }
@@ -129,9 +144,14 @@
 
   // ------ Click Handlers ----------
 
-  const handleHit = (hand: Array<Card>, hitFunc: (hand: Array<Card>, bustFunc: () => void) => void): void => {
+  const handleHit = (
+    hand: Array<Card>,
+    hitFunc: (hand: Array<Card>, bustFunc: () => void, who: HandType) => void,
+    who: HandType,
+  ): void => {
     checkForCorrectMove('Hit', hand)
-    hitFunc(hand, handleBust)
+    console.log(hitFunc)
+    hitFunc(hand, handleBust, who)
   }
 
   const handleStay = (hand: Array<Card>, stayFunc: () => void): void => {
@@ -146,11 +166,12 @@
 
   const handleDoubleDown = (
     hand: Array<Card>,
-    hitFunc: (hand: Array<Card>, bustFunc: () => void) => void,
+    hitFunc: (hand: Array<Card>, bustFunc: () => void, who: HandType) => void,
     stayFunc: () => void,
+    who: HandType,
   ): void => {
     checkForCorrectMove('DoubleDown', hand)
-    doubleDown(hand, () => hitFunc(hand, handleBust), stayFunc)
+    doubleDown(hand, () => hitFunc(hand, handleBust, who), stayFunc)
   }
 
   const handlePeek = (): void => {
@@ -357,12 +378,12 @@
       case 'ArrowRight':
       case 'd':
         if (!lockedIn && !split) {
-          handleHit(userCards, () => hit(userCards, handleBust))
+          handleHit(userCards, () => hit(userCards, handleBust, 'User'), 'User')
         }
         if (split && !leftHandDone) {
-          handleHit(leftHand, () => hit(leftHand, handleSplitBust))
+          handleHit(leftHand, () => hit(leftHand, handleSplitBust, 'Left'), 'Left')
         } else if (split && leftHandDone && !rightHandDone) {
-          handleHit(rightHand, () => hit(rightHand, handleSplitBust))
+          handleHit(rightHand, () => hit(rightHand, handleSplitBust, 'Right'), 'Right')
         }
         break
       case 'ArrowUp':
@@ -374,13 +395,13 @@
       case 'ArrowDown':
       case 's':
         if (!lockedIn && userCards.length === 2 && !split) {
-          handleDoubleDown(userCards, () => hit(userCards, handleBust), stay)
+          handleDoubleDown(userCards, () => hit(userCards, handleBust, 'User'), stay, 'User')
         }
 
         if (split && !leftHandDone) {
-          handleDoubleDown(leftHand, () => hit(leftHand, handleSplitBust), stayLeft)
+          handleDoubleDown(leftHand, () => hit(leftHand, handleSplitBust, 'Left'), stayLeft, 'Left')
         } else if (split && leftHandDone && !rightHandDone) {
-          handleDoubleDown(rightHand, () => hit(rightHand, handleSplitBust), stayRight)
+          handleDoubleDown(rightHand, () => hit(rightHand, handleSplitBust, 'Right'), stayRight, 'Right')
         }
         break
       default:
@@ -673,7 +694,7 @@
               </button>
               <button
                 class="button is-success is-outlined"
-                on:click={() => handleDoubleDown(leftHand, hit(leftHand, handleSplitBust), stayLeft)}
+                on:click={() => handleDoubleDown(leftHand, () => hit(leftHand, handleSplitBust, 'Left'), stayLeft, 'Left')}
                 disabled={leftHandDone || leftHand.length > 2}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-down" />
@@ -685,7 +706,7 @@
               </button>
               <button
                 class="button is-primary is-outlined"
-                on:click={() => handleHit(leftHand, hit(leftHand, handleSplitBust))}
+                on:click={() => handleHit(leftHand, () => hit(leftHand, handleSplitBust, 'Left'), 'Left')}
                 disabled={leftHandDone || isBusted(leftHand)}>
                 <span class="icon is-small">
                   <i class="fas fa-hand-holding-medical" />
@@ -710,7 +731,7 @@
               </button>
               <button
                 class="button is-success is-outlined"
-                on:click={() => handleDoubleDown(rightHand, hit(rightHand, handleSplitBust), stayRight)}
+                on:click={() => handleDoubleDown(rightHand, () => hit(rightHand, handleSplitBust, 'Right'), stayRight, 'Right')}
                 disabled={!leftHandDone || rightHand.length > 2 || rightHandDone}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-down" />
@@ -722,7 +743,7 @@
               </button>
               <button
                 class="button is-primary is-outlined"
-                on:click={() => handleHit(rightHand, hit(rightHand, handleSplitBust))}
+                on:click={() => handleHit(rightHand, () => hit(rightHand, handleSplitBust, 'Right'), 'Right')}
                 disabled={!(leftHandDone || isBusted(leftHand) || isBusted(rightHand)) || rightHandDone}>
                 <span class="icon is-small">
                   <i class="fas fa-hand-holding-medical" />
@@ -748,7 +769,7 @@
 
               <button
                 class="button is-success is-outlined"
-                on:click={() => handleDoubleDown(userCards, hit(userCards, handleBust), stay)}
+                on:click={() => handleDoubleDown(userCards, () => hit(userCards, handleBust, 'User'), stay, 'User')}
                 disabled={lockedIn || userCards.length !== 2}>
                 <span class="icon is-small">
                   <i class="fas fa-chevron-down" />
@@ -775,7 +796,7 @@
 
               <button
                 class="button is-primary is-outlined"
-                on:click={() => handleHit(userCards, hit(userCards, handleBust))}
+                on:click={() => handleHit(userCards, () => hit(userCards, handleBust, 'User'), 'User')}
                 disabled={lockedIn}>
                 <span class="icon is-small">
                   <i class="fas fa-hand-holding-medical" />
@@ -829,7 +850,11 @@
 
       <div class="field is-horizontal">
         <label for="correctPct">Basic Strategy Correctness</label>
-        <progress id="correctPct" class="progress is-primary" max="100" />
+        <progress
+          id="correctPct"
+          class="progress is-primary"
+          value={Math.floor((correctDecisions / handsPlayed) * 100)}
+          max="100" />
         <span>{Math.floor((correctDecisions / handsPlayed) * 100)}%</span>
       </div>
 
