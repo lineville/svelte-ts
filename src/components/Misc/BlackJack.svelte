@@ -859,12 +859,9 @@
         <span class={`tag is-light is-medium ${deckCount < 0 ? 'is-danger' : deckCount > 0 ? 'is-success' : ''}`}>
           <p class="subtitle">Count: {deckCount}</p>
         </span>
-      </div>
-
-      {#if hintEnabled}
-        <div class="field is-horizontal">
+        {#if hintEnabled}
           {#if !hideInfoMessage}
-            <span class={`tag is-light is-medium`} id="infoTag" transition:fly={{ x: -2000, duration: 500 }}>
+            <span class={`tag is-light is-medium`} id="infoTag" transition:fly={{ x: 2000, duration: 500 }}>
               Don's hints are purely based on basic strategy he can't see any of the cards in the deck!
               <button
                 class="delete"
@@ -873,8 +870,8 @@
                 }} />
             </span>
           {/if}
-        </div>
-      {/if}
+        {/if}
+      </div>
       <div class="field is-horizontal">
         {#if !hideInfoTip}
           <span class={`tag is-info is-light is-medium`} id="infoTag" transition:fly={{ x: -2000, duration: 500 }}>
