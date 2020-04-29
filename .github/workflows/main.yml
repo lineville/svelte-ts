@@ -2,7 +2,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - master
+      - blackjack
 
 jobs:
   firebase-deploy:
@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+        uses: actions/checkout@blackjack
       - name: Setup Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@blackjack
         with:
           node-version: '10.x'
       - run: npm install
       - run: npm run test
       - run: npm run build
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@blackjack
         with:
           args: deploy --only hosting
         env:
