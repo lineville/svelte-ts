@@ -34,16 +34,16 @@
   </div>
 
   <div id="navbarBasicExample" class="navbar-menu" class:is-active={mobileView}>
-    <div class="navbar-start">
+    <!-- <div class="navbar-start">
       {#each links as link, idx}
         <a class="navbar-item" href="/{link}" rel="noopener">{emojis[idx]} {link}</a>
       {/each}
 
-    </div>
+    </div> -->
 
     <div class="navbar-end">
 
-      <div class="navbar-item has-dropdown is-hoverable">
+      <!-- <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">🕹️ Time Wasters</a>
 
         <div class="navbar-dropdown">
@@ -52,7 +52,7 @@
           <a class="navbar-item" href="/profitcalculator" rel="noopener">📉 Profit Calculator</a>
           <a class="navbar-item" href="/blackjack" rel="noopener">🃏 BlackJack</a>
         </div>
-      </div>
+      </div> -->
 
       <!-- <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="/">⚙️ Gizmos</a>
@@ -81,7 +81,7 @@
       <a class="navbar-item" href="https://lineville.github.io/portfolio/" target="_blank" rel="noopener">👋 Me</a>
 
       <div class="navbar-item tags has-addons">
-        <span class="tag">v 0.0.1</span>
+        <span class="tag">v 1.2.0</span>
         <span class="tag is-primary">Beta</span>
       </div>
     </div>

@@ -1,6 +1,6 @@
 {
   "name": "svelte-ts",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "devDependencies": {
     "@pyoner/svelte-ts-preprocess": "^1.2.1",
     "@types/chai": "^4.2.11",
