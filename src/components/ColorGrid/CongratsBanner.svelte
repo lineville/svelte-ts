@@ -9,23 +9,9 @@
 
 <style>
   button {
-    margin: 10px 10px;
-  }
-  #congrats {
-    background-color: rgb(87, 231, 87);
-
-    /* height: 80%;
-    margin: 20px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center; */
+    margin: 10px 10px 10px 10px;
   }
 </style>
-
-<!-- <div id="congrats">
-</div> -->
 
 <div class="modal is-active">
   <div class="modal-background" />
@@ -40,6 +26,4 @@
       <button class="modal-close is-large" aria-label="close" />
     </section>
   </div>
-  <!-- <div class="modal-content" id="congrats">
-  </div> -->
 </div>
