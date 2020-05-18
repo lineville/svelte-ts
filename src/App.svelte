@@ -2,9 +2,8 @@
   import 'bulma/bulma.sass'
   import { writable } from 'svelte/store'
   import { myStore } from './store'
-  import { Router } from 'svelte-router-spa'
-  import { routes } from './routes'
   import Navbar from './components/Shared/Navbar.svelte'
+  import BlackJack from './components/Misc/BlackJack.svelte'
 </script>
 
 <style>
@@ -22,5 +21,5 @@
 
 <main>
   <Navbar />
-  <Router {routes} />
+  <BlackJack />
 </main>

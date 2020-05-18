@@ -25,7 +25,6 @@
     "rollup-plugin-terser": "^5.2.0",
     "sass": "^1.26.3",
     "svelte": "^3.12.1",
-    "svelte-router-spa": "^5.4.4",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4"
   },
