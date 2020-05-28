@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "svelte-ts"
+  },
+  "targets": {
+    "svelte-ts": {
+      "hosting": {
+        "blackjack": [
+          "alwaysbreakeven"
+        ],
+        "master": [
+          "svelte-ts"
+        ]
+      }
+    }
   }
 }
