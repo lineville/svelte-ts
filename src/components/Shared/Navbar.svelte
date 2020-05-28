@@ -78,7 +78,7 @@
         <span>GitHub</span>
       </a>
 
-      <a class="navbar-item" href="https://lineville.github.io/portfolio/" target="_blank" rel="noopener">👋 Me</a>
+      <a class="navbar-item" href="https://portfolio-6eyf.onrender.com/" target="_blank" rel="noopener">👋 Me</a>
 
       <div class="navbar-item tags has-addons">
         <span class="tag">v 0.0.1</span>
