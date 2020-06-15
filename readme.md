@@ -17,3 +17,6 @@ npm run dev
 npm run test
 npm run coverage
 ```
+
+## BlackJack Branch
+A seperate deployment exists of the blackjack branch which is the same project base but only shows the blackjack game it can be found [here](https://breakeven.dev)
