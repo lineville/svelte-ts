@@ -78,7 +78,12 @@
         <span>GitHub</span>
       </a>
 
-      <a class="navbar-item" href="https://portfolio-6eyf.onrender.com/" target="_blank" rel="noopener">👋 Me</a>
+      <a class="navbar-item" href="https://portfolio-6eyf.onrender.com/" target="_blank" rel="noopener">
+        <img
+          src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortWaved&accessoriesType=Prescription02&hairColor=Blonde&facialHairType=BeardLight&facialHairColor=Auburn&clotheType=Hoodie&clotheColor=Heather&eyeType=Default&eyebrowType=RaisedExcitedNatural&mouthType=Smile&skinColor=Light"
+          alt="avatar" />
+        &nbsp Me
+      </a>
 
       <div class="navbar-item tags has-addons">
         <span class="tag">v 0.0.1</span>
