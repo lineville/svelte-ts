@@ -80,8 +80,8 @@
 
       <a class="navbar-item" href="https://portfolio-6eyf.onrender.com/" target="_blank" rel="noopener">
         <img
-          src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortWaved&accessoriesType=Prescription02&hairColor=Blonde&facialHairType=BeardLight&facialHairColor=Auburn&clotheType=Hoodie&clotheColor=Heather&eyeType=Default&eyebrowType=RaisedExcitedNatural&mouthType=Smile&skinColor=Light"
-          alt="avatar" />
+          alt="avatar"
+          src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Prescription02&hairColor=Blonde&facialHairType=BeardLight&facialHairColor=Blonde&clotheType=Hoodie&clotheColor=Heather&eyeType=Default&eyebrowType=RaisedExcitedNatural&mouthType=Smile&skinColor=Light" />
         &nbsp Me
       </a>
 
