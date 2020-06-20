@@ -896,7 +896,7 @@
         {#each deck.slice(0, 5).reverse() as card, idx (card)}
           <li key={card} transition:slide>
             <figure class="image is-64x64">
-              <img src={`/images/${cardToImage(card)}.jpg`} alt="playing card" />
+              <img src={`./images/${cardToImage(card)}.jpg`} alt="playing card" />
             </figure>
           </li>
         {/each}
@@ -906,7 +906,7 @@
         {#each deck.slice(0, 5).reverse() as card, idx (card)}
           <li key={card} transition:slide>
             <figure class="image is-64x64">
-              <img src={`/images/Gray_back.jpg`} alt="playing card" />
+              <img src={`./images/Gray_back.jpg`} alt="playing card" />
             </figure>
           </li>
         {/each}
