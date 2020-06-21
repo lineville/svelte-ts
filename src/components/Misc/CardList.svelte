@@ -24,9 +24,9 @@
       <div class="card-image">
         <figure class="image is-96x96">
           {#if visible || idx === 0}
-            <img src={`/images/${card}.jpg`} alt="playing card" />
+            <img src={`./images/${card}.jpg`} alt="playing card" />
           {:else}
-            <img src="/images/Gray_back.jpg" alt="playing card" />
+            <img src="./images/Gray_back.jpg" alt="playing card" />
           {/if}
         </figure>
       </div>
