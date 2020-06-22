@@ -7,6 +7,11 @@ This is a hobby project built with Svelte 3 components in TypeScript [Svelte](ht
 ```zsh
 git clone https://github.com/lineville/svelte-ts
 cd svelte-ts
+
+yarn && yarn run dev
+
+OR
+
 npm i
 npm run dev
 ```
@@ -14,9 +19,15 @@ npm run dev
 ## Testing
 
 ```zsh
+yarn run test
+yarn run coverage
+
+OR
+
 npm run test
 npm run coverage
 ```
 
 ## BlackJack Branch
+
 A seperate deployment exists of the blackjack branch which is the same project base but only shows the blackjack game it can be found [here](https://breakeven.dev)
