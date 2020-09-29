@@ -17,6 +17,7 @@ jobs:
           node-version: '10.x'
       - run: npm install
       - run: npm run test
+      - run: npm run check
       - run: npm run build
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
