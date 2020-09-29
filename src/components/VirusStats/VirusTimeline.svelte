@@ -8,8 +8,6 @@
   let canvas: any
   let chart: any
   let data: any = {}
-  let dates: string[] = []
-  let countries: string[] = []
   let selectedMonths: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   let threshold = 1000
   let dataSelection = 'deaths'
@@ -41,8 +39,8 @@
       type: 'line',
       data: {
         datasets: Object.keys(data)
-          .filter(country => totalDeaths(country) >= threshold)
-          .map(country => createDataSet(country)),
+          .filter((country) => totalDeaths(country) >= threshold)
+          .map((country) => createDataSet(country)),
       },
       options: {
         legend: {
@@ -88,10 +86,6 @@
     try {
       let result = await fetch(apiURL)
       data = await result.json()
-      dates = data[Object.keys(data)[0]].map((dataPoint: any) => dataPoint.date)
-      countries = Object.keys(data)
-        .sort((a, b) => totalDeaths(b) - totalDeaths(a))
-        .slice(0, 10)
     } catch (e) {
       console.error('error fetching timeline data', e)
     } finally {
@@ -111,14 +105,10 @@
   <h1>Timeline</h1>
 
   <div class="field is-grouped is-grouped-centered">
-    <div class="field-label">
-      <label class="label">Threshold</label>
-    </div>
+    <div class="field-label"><label for="threshold" class="label">Threshold</label></div>
     <div class="field-body">
       <div class="field is-narrow">
-        <p class="control">
-          <input class="input is-info" type="number" bind:value={threshold} />
-        </p>
+        <p class="control"><input class="input is-info" type="number" bind:value={threshold} /></p>
       </div>
       <div class="field has-addons">
         <div class="control">
@@ -143,5 +133,4 @@
   <div class="chart-container" style="position: relative; height:90vh; width:95vw">
     <canvas id="timelineChart" bind:this={canvas} />
   </div>
-
 </div>

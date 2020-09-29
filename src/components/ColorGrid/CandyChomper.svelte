@@ -1,7 +1,7 @@
 <script lang="ts">
   // Dependencies
   import { onDestroy } from 'svelte'
-  import { colorFill, colors, randomGrid, completedGrid, shuffleGrid } from '../../utils/ColorFill'
+  import { randomGrid, completedGrid } from '../../utils/ColorFill'
   import { chomp, swapCandies } from '../../utils/CandyChomper'
   import ColorGrid from './ColorGrid.svelte'
   import CongratsBanner from './CongratsBanner.svelte'
@@ -14,14 +14,12 @@
   // State
   let row: number
   let column: number
-  let newColor: string
   let grid: string[][]
   let chomps = 0
   let moveCount = 0
   let completed = false
   let seconds = 0
   let teleportEnabled = false
-  const colorOptions = colors.slice(0, numColors).map((c, i) => ({ id: i, color: c }))
 
   // Set up timer
   const onTick = () => seconds++
@@ -29,11 +27,11 @@
   onDestroy(() => clearInterval(interval))
 
   // Initialize grid
-  const init = (() => {
-    grid = randomGrid(width, height, numColors)
-    row = Math.floor(Math.random() * height)
-    column = Math.floor(Math.random() * width)
-  })()
+  // const init = (() => {
+  //   grid = randomGrid(width, height, numColors)
+  //   row = Math.floor(Math.random() * height)
+  //   column = Math.floor(Math.random() * width)
+  // })()
 
   // Fill the grid
   const handleSubmit = () => {
@@ -50,37 +48,36 @@
   // Handle key presses
   const handleKeydown = (event: KeyboardEvent) => {
     if (!completed) {
-      switch (event.keyCode) {
+      switch (event.key) {
         // up
-        case 38:
-        case 87: {
+        case 'ArrowUp':
+        case 'W': {
           column = column - 1 < 0 ? width - 1 : column - 1
           moveCount++
           break
         }
         // down
-        case 40:
-        case 83: {
+        case 'ArrowDown':
+        case 'S': {
           column = column + 1 > width - 1 ? 0 : column + 1
           moveCount++
           break
         }
         // left
-        case 37:
-        case 65: {
+        case 'ArrowLeft':
+        case 'D': {
           row = row - 1 < 0 ? height - 1 : row - 1
           moveCount++
           break
         }
         // right
-        case 39:
-        case 68: {
+        case 'ArrowRight':
+        case 'D': {
           row = row + 1 > height - 1 ? 0 : row + 1
           moveCount++
           break
         }
-        case 13:
-        case 32: {
+        case 'Enter': {
           // enter
           handleSubmit()
           break
@@ -142,7 +139,6 @@
 
   {#if !completed}
     <div id="userInputs">
-
       <button type="submit" class="button is-primary" on:click={handleSubmit}>Chomp</button>
       <span>Chomps: {chomps}</span>
       <span>Moves: {moveCount}</span>
@@ -150,7 +146,7 @@
       <span>Time: {seconds} seconds</span>
     </div>
   {:else}
-    <CongratsBanner {moveCount} {chomps} {seconds} on:reset={reset} />
+    <CongratsBanner {moveCount} fillCount={chomps} {seconds} on:reset={reset} />
   {/if}
 
   <ColorGrid {grid} {teleportEnabled} selectedRow={row} selectedColumn={column} on:select={select} />

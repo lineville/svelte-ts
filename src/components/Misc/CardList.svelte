@@ -2,7 +2,8 @@
   import { createEventDispatcher } from 'svelte'
 
   import { fly } from 'svelte/transition'
-  export let cards = []
+  import { sineInOut } from 'svelte/easing'
+  export let cards = new Array<string>()
   export let visible = true
   const dispatch = createEventDispatcher()
 </script>
@@ -16,18 +17,15 @@
 
 {#each cards as card, idx (card + idx)}
   <li
-    key={card + idx}
-    in:fly={{ x: (idx === 0 ? -1 : 1) * 2000, duration: 500, delay: 300 }}
-    out:fly={{ x: -2000, duration: 800 }}
+    in:fly={{ x: (idx === 0 ? -1 : 1) * 2000, y: 0, easing: sineInOut, duration: 500, delay: 300, opacity: 0 }}
+    out:fly={{ x: -2000, y: 0, easing: sineInOut, duration: 800, delay: 0, opacity: 0 }}
     on:outroend={() => dispatch('gone', { card: card })}>
     <div class="card">
       <div class="card-image">
         <figure class="image is-96x96">
           {#if visible || idx === 0}
             <img src={`/images/${card}.jpg`} alt="playing card" />
-          {:else}
-            <img src="/images/Gray_back.jpg" alt="playing card" />
-          {/if}
+          {:else}<img src="/images/Gray_back.jpg" alt="playing card" />{/if}
         </figure>
       </div>
     </div>

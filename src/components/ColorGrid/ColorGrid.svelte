@@ -46,7 +46,7 @@
   <ul>
     {#each grid as row, idx1}
       <ul class="row">
-        {#each row as col, idx2}
+        {#each row as _col, idx2}
           {#if teleportEnabled}
             <li
               class={idx1 === selectedRow && idx2 === selectedColumn ? 'selected' : ''}

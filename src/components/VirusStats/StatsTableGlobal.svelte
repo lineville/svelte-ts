@@ -14,7 +14,14 @@
   }
 </script>
 
-<table class="table is-hoverable" align="center">
+<style>
+  td {
+    text-align: center;
+    width: 100%;
+  }
+</style>
+
+<table class="table is-hoverable">
   <tr>
     <td>Deaths</td>
     <td>{cleanData(deaths)}</td>
@@ -51,5 +58,4 @@
     <td>Deaths / Million</td>
     <td>{cleanData(deathsPerOneMillion)}</td>
   </tr>
-
 </table>

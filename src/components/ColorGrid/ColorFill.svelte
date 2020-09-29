@@ -49,37 +49,36 @@
   // Handle key presses
   function handleKeydown(event: KeyboardEvent) {
     if (!completed) {
-      switch (event.keyCode) {
+      switch (event.key) {
         // up
-        case 38:
-        case 87: {
+        case 'ArrowUp':
+        case 'W': {
           column = column - 1 < 0 ? width - 1 : column - 1
           moveCount++
           break
         }
         // down
-        case 40:
-        case 83: {
+        case 'ArrowDown':
+        case 'S': {
           column = column + 1 > width - 1 ? 0 : column + 1
           moveCount++
           break
         }
         // left
-        case 37:
-        case 65: {
+        case 'ArrowLeft':
+        case 'A': {
           row = row - 1 < 0 ? height - 1 : row - 1
           moveCount++
           break
         }
         // right
-        case 39:
-        case 68: {
+        case 'ArrowRight':
+        case 'D': {
           row = row + 1 > height - 1 ? 0 : row + 1
           moveCount++
           break
         }
-        case 13:
-        case 32: {
+        case 'Enter': {
           // enter
           handleSubmit()
           break
@@ -166,7 +165,7 @@
       <span>Location: ({row}, {column})</span>
       <span>Time: {seconds} seconds</span>
 
-      <input bind:value={teleportEnabled} type="checkbox" class="checkbox" />
+      <input bind:checked={teleportEnabled} type="checkbox" class="checkbox" />
       <label for="cheatToggle">Cheat</label>
     </div>
   {:else}

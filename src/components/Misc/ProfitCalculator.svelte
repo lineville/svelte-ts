@@ -3,6 +3,7 @@
   import { onMount } from 'svelte'
   import Chart from 'chart.js'
   import maxProfit from '../../utils/ProfitOptimizer'
+  import { sineInOut } from 'svelte/easing'
   export let prices: Array<number> = [0]
   export let newPrice: number = 0
   export let availableBuys: number = 1
@@ -29,7 +30,7 @@
     return new Chart(ctx, {
       type: 'line',
       data: {
-        labels: prices.map((p: number, i: number) => i),
+        labels: prices.map((_p: number, i: number) => i),
         datasets: [
           {
             label: 'Stock Price',
@@ -104,31 +105,22 @@
   <hr />
 
   <div class="columns">
-
-    <div class="column is-half">
-      <canvas id="stockChart" bind:this={canvas} />
-    </div>
+    <div class="column is-half"><canvas id="stockChart" bind:this={canvas} /></div>
 
     <div class="column is-half">
       <div class="field is-horizontal">
-        <div class="field-label is-expanded">
-          <label class="label">Stock Price</label>
-        </div>
+        <div class="field-label is-expanded"><label for="stockPrices" class="label">Stock Price</label></div>
         <div class="field-body">
           <div class="field">
             <p class="control is-expanded has-icons-left">
               <input class="input is-info" type="number" name="newPrice" bind:value={newPrice} />
 
-              <span class="icon is-small is-left">
-                <i class="fa fa-dollar-sign" />
-              </span>
+              <span class="icon is-small is-left"> <i class="fa fa-dollar-sign" /> </span>
               <button class="button is-info" on:click={() => addPrice()}>Add ➕</button>
               <span class="tag is-primary is-large">Profit: $ {profit}</span>
             </p>
           </div>
-          <div class="field-label">
-            <label class="label">Trades</label>
-          </div>
+          <div class="field-label"><label for="trades" class="label">Trades</label></div>
           <div class="field">
             <p class="control is-expanded has-icons-left">
               <input
@@ -137,29 +129,23 @@
                 name="availableBuys"
                 value={availableBuys}
                 on:change={handleChange} />
-              <span class="icon is-small is-left">
-                <i class="fa fa-sync" />
-              </span>
+              <span class="icon is-small is-left"> <i class="fa fa-sync" /> </span>
               <button class="button is-light" on:click={clearPrices}>Clear</button>
-
             </p>
           </div>
         </div>
-
       </div>
 
       <hr />
       <ul>
-
         {#each prices as price, day}
-          <li transition:fly={{ y: 200, duration: 500 }}>
-
+          <li transition:fly={{ x: 0, y: 200, duration: 500, delay: 0, easing: sineInOut, opacity: 0.5 }}>
             <span>
-              Day {day}
+              Day
+              {day}
               {#if day === editRowIndex}
                 <!-- <p class="control is-expanded"> -->
                 <input bind:value={price} type="number" class="input is-info" />
-                <!-- </p> -->
               {:else}$ {price}{/if}
               <!-- <p class="control"> -->
               {#if day === editRowIndex}
@@ -174,9 +160,7 @@
             </span>
           </li>
         {/each}
-
       </ul>
-
     </div>
   </div>
 </div>

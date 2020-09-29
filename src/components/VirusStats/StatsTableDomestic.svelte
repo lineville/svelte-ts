@@ -10,7 +10,13 @@
   }
 </script>
 
-<table class="table is-hoverable" align="center">
+<style>
+  .table {
+    align-items: center;
+  }
+</style>
+
+<table class="table is-hoverable">
   <tr>
     <td>Deaths</td>
     <td>{cleanData(deaths)}</td>
@@ -31,5 +37,4 @@
     <td>Active</td>
     <td>{cleanData(active)}</td>
   </tr>
-
 </table>

@@ -5,13 +5,19 @@
   const apiURL = 'https://corona.lmao.ninja/v2/countries/'
 
   let data = {}
-  let countryOptions = []
+  let countryOptions = new Array<Country>()
   let selectedCountry = 'USA'
 
   const handleChange = async (e: any) => {
     selectedCountry = e.target.value
     let res = await fetch(apiURL + selectedCountry)
     data = await res.json()
+  }
+
+  type Country = {
+    id: number
+    country: string
+    flag: string
   }
 
   onMount(async () => {
@@ -34,15 +40,13 @@
 <div id="countries-list is-center" class="field is-grouped is-grouped-centered">
   <p class="control has-icons-left">
     <span class="select">
-      <select on:change={handleChange} value={selectedCountry}>
+      <select on:blur={handleChange} value={selectedCountry}>
         {#each countryOptions as option}
           <option value={option.country}>{option.country}</option>
         {/each}
       </select>
     </span>
-    <span class="icon is-small is-left">
-      <i class="fas fa-globe" />
-    </span>
+    <span class="icon is-small is-left"> <i class="fas fa-globe" /> </span>
   </p>
 </div>
 

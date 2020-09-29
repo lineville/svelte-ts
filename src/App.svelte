@@ -1,7 +1,6 @@
-<script>
+<script lang="ts">
   import 'bulma/bulma.sass'
-  import { writable } from 'svelte/store'
-  import { myStore } from './store'
+  // @ts-ignore
   import { Router } from 'svelte-router-spa'
   import { routes } from './routes'
   import Navbar from './components/Shared/Navbar.svelte'

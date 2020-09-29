@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { fly, slide } from 'svelte/transition'
-  import { tweened } from 'svelte/motion'
-  import { cubicOut } from 'svelte/easing'
+  import { sineInOut, sineOut } from 'svelte/easing'
   import CardList from './CardList.svelte'
   import { decideMove, computeScore, cardCount } from '../../utils/BasicStrategy'
 
@@ -246,7 +245,7 @@
   const newDeck = (): Array<Card> => {
     let result = new Array<Card>()
     const suites: Array<Suite> = ['❤️', '♦', '♣️', '♠️']
-    suites.forEach(suite => {
+    suites.forEach((suite) => {
       for (let i = 2; i <= 14; i++) {
         result.push(indexToCard(i, suite))
       }
@@ -438,11 +437,6 @@
     handsPlayed += 1
   }
 
-  const progress = tweened(0, {
-    duration: 400,
-    easing: cubicOut,
-  })
-
   // ----------- State -----------
 
   let balance = 100
@@ -544,21 +538,22 @@
 
 <div class="columns is-mobile is-centered" id="blackJackContainer">
   <div class="column is-11">
-
     <h1 class="title is-centered">BlackJack</h1>
 
     <h2 class="subtitle">
       {peekDealer || lockedIn ? `Dealer's Hand : ${computeScore(dealerCards)}` : `Dealer's Hand`}
     </h2>
 
-    <CardList cards={dealerCards.map(c => cardToImage(c))} visible={peekDealer || lockedIn} />
+    <CardList cards={dealerCards.map((c) => cardToImage(c))} visible={peekDealer || lockedIn ? true : undefined} />
     <hr />
 
     {#if split}
       <h2 class="subtitle is-primary">
-        Left Hand : {computeScore(leftHand)}
+        Left Hand :
+        {computeScore(leftHand)}
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Right Hand : {computeScore(rightHand)}
+        Right Hand :
+        {computeScore(rightHand)}
       </h2>
     {:else}
       <h2 class="subtitle">Your Hand : {computeScore(userCards)}</h2>
@@ -566,12 +561,12 @@
 
     {#if split}
       <ul>
-        <CardList cards={leftHand.map(c => cardToImage(c))} />
+        <CardList cards={leftHand.map((c) => cardToImage(c))} />
         <span style="display:inline-block; width: 200px;" />
-        <CardList cards={rightHand.map(c => cardToImage(c))} />
+        <CardList cards={rightHand.map((c) => cardToImage(c))} />
       </ul>
     {:else}
-      <CardList cards={userCards.map(c => cardToImage(c))} />
+      <CardList cards={userCards.map((c) => cardToImage(c))} />
     {/if}
 
     <hr />
@@ -579,7 +574,7 @@
     {#if lockedIn}
       <div
         class={`notification is-narrow ${userWon ? 'is-success' : push ? 'is-info' : 'is-danger'}`}
-        transition:fly={{ x: -1000, duration: 500, delay: 200 }}>
+        transition:fly={{ x: -1000, y: 0, easing: sineInOut, opacity: 0, duration: 500, delay: 200 }}>
         <span class={`tag is-large ${userWon ? 'is-success' : push ? 'is-info' : 'is-danger'}`} id="wonOrLost">
           <strong>{userWon ? 'You Won!' : push ? 'You Tied!' : 'You Lost!'}</strong>
         </span>
@@ -615,7 +610,7 @@
 
       {#if insuranceOpen}
         <div class="field is-horizontal">
-          <div transition:fly={{ x: -1000, duration: 500 }}>
+          <div transition:fly={{ x: -1000, y: 0, easing: sineInOut, delay: 0, opacity: 0, duration: 500 }}>
             <span class="tag is-large is-info">Insurance ?</span>
             <span class="control has-icons-left">
               <input
@@ -647,15 +642,15 @@
             {#if wonInsurance}
               <span
                 class="icon is-small"
-                in:fly={{ y: -1000, duration: 500 }}
-                out:fly={{ y: -1000, duration: 500, delay: 800 }}>
+                in:fly={{ x: 0, y: -1000, easing: sineInOut, delay: 0, opacity: 0, duration: 500 }}
+                out:fly={{ x: 0, y: -1000, easing: sineInOut, delay: 0, opacity: 0,duration: 500 }}>
                 <i class="fas fa-coins" />
               </span>
 
               <span
                 class={`tag is-light is-success is-medium`}
                 id="infoTag"
-                transition:fly={{ x: 1000, duration: 500 }}>
+                transition:fly={{ x: 1000, y: 0, duration: 500, delay: 0, opacity: 0, easing: sineOut}}>
                 You won ${insuranceBet} from the insurance side bet even though you lost the hand.
               </span>
             {/if}
@@ -664,7 +659,7 @@
               <span
                 class={`tag is-light is-danger is-medium`}
                 id="infoTag"
-                transition:fly={{ x: 1000, duration: 500, delay: 500 }}>
+                transition:fly={{ x: 1000, y: 0, duration: 500, delay: 500, easing: sineInOut, opacity: 0}}>
                 You lost ${insuranceBet} from the insurance side bet. Don't worry you've still got a chance!
               </span>
             {/if}
@@ -673,7 +668,7 @@
 
         </div>
       {:else}
-        <div class="field is-horizontal" transition:fly={{ x: 2000, duration: 500, delay: 200 }}>
+        <div class="field is-horizontal" transition:fly={{ x: 2000, y: 0, easing: sineInOut, duration: 500, delay: 200, opacity: 0}}>
           <div>
 
             {#if split}
@@ -818,8 +813,8 @@
           {#if lockedIn && userWon}
             <span
               class="icon is-small"
-              in:fly={{ y: -1000, duration: 500 }}
-              out:fly={{ y: -1000, duration: 500, delay: 800 }}>
+              in:fly={{ x: 0, y: -1000, duration: 500, delay: 0, easing: sineInOut, opacity: 0}}
+              out:fly={{ x: 0, y: -1000, duration: 500, delay: 800, easing: sineOut, opacity: 0}}>
               <i class="fas fa-coins" />
             </span>
           {/if}
@@ -836,7 +831,7 @@
           </button>
 
           {#if hintEnabled}
-            <span class={`tag ${hintColor} is-light is-large subtitle`} transition:fly={{ x: 2000, duration: 500 }}>
+            <span class={`tag ${hintColor} is-light is-large subtitle`} transition:fly={{ x: 2000, y:0, duration: 500, delay: 0, easing: sineInOut, opacity: 0 }}>
               {hint}
             </span>
           {/if}
@@ -861,7 +856,7 @@
         </span>
         {#if hintEnabled}
           {#if !hideInfoMessage}
-            <span class={`tag is-light is-medium`} id="infoTag" transition:fly={{ x: 2000, duration: 500 }}>
+            <span class={`tag is-light is-medium`} id="infoTag" transition:fly={{ x: 2000, y: 0, duration: 500, delay: 0, easing: sineInOut, opacity: 0 }}>
               Don's hints are purely based on basic strategy he can't see any of the cards in the deck!
               <button
                 class="delete"
@@ -874,7 +869,7 @@
       </div>
       <div class="field is-horizontal">
         {#if !hideInfoTip}
-          <span class={`tag is-info is-light is-medium`} id="infoTag" transition:fly={{ x: -2000, duration: 500 }}>
+          <span class={`tag is-info is-light is-medium`} id="infoTag" transition:fly={{ x: -2000, y: 0, duration: 500, delay: 0, easing: sineInOut, opacity: 0 }}>
             Tip: Use the arrow keys or WASD as an alternative to pressing the buttons (use the arrow icons on the
             buttons as a legend)
             <button
@@ -886,15 +881,14 @@
         {/if}
       </div>
     </div>
-
   </div>
 
   <!-- Deck to Peek from -->
   <div class="column is-1">
     {#if peekDealer}
       <ul>
-        {#each deck.slice(0, 5).reverse() as card, idx (card)}
-          <li key={card} transition:slide>
+        {#each deck.slice(0, 5).reverse() as card}
+          <li transition:slide={{ x: 0, y: 0, delay: 0, duration: 200, easing: sineInOut, opacity: 0}}>
             <figure class="image is-64x64">
               <img src={`/images/${cardToImage(card)}.jpg`} alt="playing card" />
             </figure>
@@ -903,8 +897,8 @@
       </ul>
     {:else}
       <ul>
-        {#each deck.slice(0, 5).reverse() as card, idx (card)}
-          <li key={card} transition:slide>
+        {#each deck.slice(0, 5).reverse() as _card}
+          <li transition:slide={{ delay: 0, duration: 200, easing: sineInOut }}>
             <figure class="image is-64x64">
               <img src={`/images/Gray_back.jpg`} alt="playing card" />
             </figure>

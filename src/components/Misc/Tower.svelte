@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Stack from '../utils/Stack'
+  import Stack from '../../utils/Stack'
   export let value: Stack<number>
   export let index: number
 </script>

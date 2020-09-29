@@ -1,7 +1,6 @@
 <script lang="ts">
-  let tasks = [];
-  let currentUser: string;
-
+  let tasks = new Array<{ description: string }>()
+  let currentUser: string
 </script>
 
 <div id="tasklist">
